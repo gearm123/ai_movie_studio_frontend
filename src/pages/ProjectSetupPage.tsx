@@ -110,7 +110,7 @@ export function ProjectSetupPage({
           Back
         </button>
         <button type="button" className="project-setup__continue" onClick={onContinue}>
-          Continue to beats
+          Continue
         </button>
       </div>
     </section>
