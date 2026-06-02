@@ -1,10 +1,12 @@
-import type { MovieType, ProjectSettings } from "../types/project";
+import type { MovieType, OutputResolution, ProjectSettings } from "../types/project";
 import {
   MOVIE_TYPES,
   NARRATORS,
+  OUTPUT_RESOLUTIONS,
   STYLE_PRESETS,
   getMovieType,
   getNarrator,
+  getOutputResolution,
   getVisualStyleOption,
 } from "../constants/parameters";
 import { MovieStyleToggle } from "../components/MovieStyleToggle";
@@ -26,6 +28,7 @@ export function ProjectSetupPage({
 }: ProjectSetupPageProps) {
   const narrator = getNarrator(settings.narrator);
   const movieType = getMovieType(settings.movie_type);
+  const outputResolution = getOutputResolution(settings.output_resolution);
   const visualStyle = getVisualStyleOption(settings.visual_style);
 
   return (
@@ -71,6 +74,17 @@ export function ProjectSetupPage({
             onChange={(visual_style) => onChange({ visual_style })}
           />
         </div>
+
+        <SelectField
+          label="Output resolution"
+          hint={outputResolution.description}
+          value={settings.output_resolution}
+          options={OUTPUT_RESOLUTIONS.map((item) => ({
+            value: item.key,
+            label: item.label,
+          }))}
+          onChange={(value) => onChange({ output_resolution: value as OutputResolution })}
+        />
 
         <TextField
           label="Topic / figure"

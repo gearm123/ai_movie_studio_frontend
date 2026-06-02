@@ -4,6 +4,9 @@ export type VisualStyle = "image" | "video";
 /** Whole-movie blueprint category — extend as backend adds pipelines. */
 export type MovieType = "figure_blueprint";
 
+/** Final render dimensions — extend as backend adds export sizes. */
+export type OutputResolution = "1080x1920" | "720x1280" | "2160x3840";
+
 /** Mirrors backend planner `audio_params` keys (planner.py). */
 export interface BeatAudioParams {
   speaker: string;
@@ -45,6 +48,8 @@ export interface ProjectSettings {
   topic: string;
   style_preset: string;
   mode: "tiktok" | "youtube_shorts";
+  /** Target export width × height (maps to backend frame size when wired). */
+  output_resolution: OutputResolution;
   duration: number;
   /** UI narrator key — maps to backend voice id when submitted. */
   narrator: string;

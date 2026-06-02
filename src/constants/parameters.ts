@@ -50,6 +50,37 @@ export const OUTPUT_MODES = [
   { key: "youtube_shorts", label: "YouTube Shorts (1080×1920)" },
 ] as const;
 
+/** Target export resolutions — add entries as backend render paths support them. */
+export const OUTPUT_RESOLUTIONS = [
+  {
+    key: "1080x1920" as const,
+    label: "1080 × 1920",
+    description: "Vertical Full HD (9:16) — default for TikTok and Shorts.",
+    width: 1080,
+    height: 1920,
+  },
+  {
+    key: "720x1280" as const,
+    label: "720 × 1280",
+    description: "Vertical HD (9:16) — smaller files and faster renders.",
+    width: 720,
+    height: 1280,
+  },
+  {
+    key: "2160x3840" as const,
+    label: "2160 × 3840",
+    description: "Vertical 4K (9:16) — highest quality when supported.",
+    width: 2160,
+    height: 3840,
+  },
+] as const;
+
+export type OutputResolutionKey = (typeof OUTPUT_RESOLUTIONS)[number]["key"];
+
+export function getOutputResolution(key: string) {
+  return OUTPUT_RESOLUTIONS.find((resolution) => resolution.key === key) ?? OUTPUT_RESOLUTIONS[0];
+}
+
 export const DELIVERY_PROFILES = [
   { key: "cinematic_suspense", label: "Cinematic suspense" },
   { key: "neutral", label: "Neutral" },
@@ -188,6 +219,7 @@ export const DEFAULT_PROJECT_SETTINGS: ProjectSettings = {
   topic: "",
   style_preset: "tiktok_ai_history",
   mode: "tiktok",
+  output_resolution: "1080x1920",
   duration: 14,
   narrator: "studio_default",
   voice: "gary",

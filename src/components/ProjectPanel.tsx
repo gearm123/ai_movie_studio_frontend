@@ -1,5 +1,5 @@
 import type { MovieProjectDraft } from "../types/project";
-import { getMovieType, getNarrator, getVisualStyleOption } from "../constants/parameters";
+import { getMovieType, getNarrator, getOutputResolution, getVisualStyleOption } from "../constants/parameters";
 import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
 import { PunctuationNotice } from "./PunctuationNotice";
@@ -55,6 +55,10 @@ export function ProjectPanel({
             <div>
               <dt>Movie style</dt>
               <dd>{getVisualStyleOption(draft.settings.visual_style).label}</dd>
+            </div>
+            <div>
+              <dt>Output resolution</dt>
+              <dd>{getOutputResolution(draft.settings.output_resolution).label}</dd>
             </div>
             <div>
               <dt>Beats with text</dt>
