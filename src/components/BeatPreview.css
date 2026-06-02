@@ -1,0 +1,111 @@
+.beat-preview {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.beat-preview--compact {
+  gap: 0.55rem;
+}
+
+.beat-preview__frame {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  max-height: 14rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01)),
+    radial-gradient(circle at 30% 20%, rgba(232, 184, 106, 0.12), transparent 45%);
+}
+
+.beat-preview--compact .beat-preview__frame {
+  max-height: 9.5rem;
+}
+
+.beat-preview__frame-inner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.beat-preview__frame-badge {
+  justify-self: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.beat-preview__frame-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.beat-preview__frame--video .beat-preview__frame-inner {
+  animation: beat-preview-pan 4s ease-in-out infinite alternate;
+}
+
+.beat-preview__motion-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(232, 184, 106, 0.04) 0,
+    rgba(232, 184, 106, 0.04) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.8;
+  animation: beat-preview-shimmer 2.4s linear infinite;
+}
+
+.beat-preview__narration {
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.beat-preview__narration-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.beat-preview__narration p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+@keyframes beat-preview-pan {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes beat-preview-shimmer {
+  from {
+    transform: translateX(-8px);
+  }
+  to {
+    transform: translateX(8px);
+  }
+}

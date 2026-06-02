@@ -1,11 +1,18 @@
 import type { ReactNode } from "react";
+import type { AppStep } from "../types/steps";
 import "./StudioLayout.css";
 
 interface StudioLayoutProps {
+  step: AppStep;
   children: ReactNode;
 }
 
-export function StudioLayout({ children }: StudioLayoutProps) {
+const STEP_FOOTER: Record<Exclude<AppStep, "landing">, string> = {
+  setup: "Whole-movie settings",
+  beats: "Beat-by-beat editing",
+};
+
+export function StudioLayout({ step, children }: StudioLayoutProps) {
   return (
     <div className="studio-shell">
       <div className="studio-glow studio-glow--left" aria-hidden="true" />
@@ -20,15 +27,10 @@ export function StudioLayout({ children }: StudioLayoutProps) {
             <h1 className="studio-brand__title">AI Movie Studio</h1>
           </div>
         </div>
-        <p className="studio-header__tagline">
-          Plan short-form films beat by beat — visuals, narration, and final cut in one pipeline.
-        </p>
       </header>
       <main className="studio-main">{children}</main>
       <footer className="studio-footer">
-        <span>Step 1 of many</span>
-        <span className="studio-footer__dot" aria-hidden="true" />
-        <span>Structure your story</span>
+        <span>{STEP_FOOTER[step as Exclude<AppStep, "landing">]}</span>
       </footer>
     </div>
   );

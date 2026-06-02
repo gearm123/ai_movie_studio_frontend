@@ -1,14 +1,52 @@
-import { ProjectPanel } from "./components/ProjectPanel";
+import { useState } from "react";
 import { StudioLayout } from "./components/StudioLayout";
+import { ProjectPanel } from "./components/ProjectPanel";
+import { LandingPage } from "./pages/LandingPage";
+import { ProjectSetupPage } from "./pages/ProjectSetupPage";
 import { useProjectDraft } from "./hooks/useProjectDraft";
+import type { AppStep } from "./types/steps";
 import "./App.css";
 
 function App() {
-  const { draft, setBeatCount } = useProjectDraft();
+  const [step, setStep] = useState<AppStep>("landing");
+  const {
+    draft,
+    activeBeatIndex,
+    setActiveBeatIndex,
+    setBeatCount,
+    updateSettings,
+    updateBeat,
+    updateBeatAudioParam,
+    updateBeatCompositionParam,
+  } = useProjectDraft();
+
+  if (step === "landing") {
+    return <LandingPage onStart={() => setStep("setup")} />;
+  }
 
   return (
-    <StudioLayout>
-      <ProjectPanel draft={draft} onBeatCountChange={setBeatCount} />
+    <StudioLayout step={step}>
+      {step === "setup" ? (
+        <ProjectSetupPage
+          settings={draft.settings}
+          onChange={updateSettings}
+          onBack={() => setStep("landing")}
+          onContinue={() => setStep("beats")}
+        />
+      ) : null}
+
+      {step === "beats" ? (
+        <ProjectPanel
+          draft={draft}
+          activeBeatIndex={activeBeatIndex}
+          onBeatCountChange={setBeatCount}
+          onSelectBeat={setActiveBeatIndex}
+          onBeatUpdate={updateBeat}
+          onBeatAudioParamChange={updateBeatAudioParam}
+          onBeatCompositionParamChange={updateBeatCompositionParam}
+          onBack={() => setStep("setup")}
+        />
+      ) : null}
     </StudioLayout>
   );
 }

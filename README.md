@@ -23,9 +23,12 @@ powershell -File scripts\run-backend.ps1
 
 ## Current UI
 
-- **Step 1:** Choose the number of beats (story shots) for your movie
-- Timeline preview updates live
-- More project parameters and backend job submission coming next
+- **Beat count** — choose 2–12 story beats
+- **Per-beat editor** — narration (with punctuation guidance), visual prompt, duration
+- **Audio params** — backend `audio_params` keys: speaker, tone, delivery, cadence, pauses, energy, clause_pause_sec
+- **Composition params** — motion_prompt, transitions, emphasis_text; promo styles also expose visual_asset / visual_delivery
+- **Project settings** — style preset, mode, voice, delivery profile, composition toggles (matches CLI/job flags)
+- Backend job submission — next step
 
 ## Scripts
 
