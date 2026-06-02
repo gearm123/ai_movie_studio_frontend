@@ -21,6 +21,22 @@ export function getNarrator(key: string) {
   return NARRATORS.find((narrator) => narrator.key === key) ?? NARRATORS[0];
 }
 
+/** Whole-movie types — add entries as backend pipelines ship. */
+export const MOVIE_TYPES = [
+  {
+    key: "figure_blueprint" as const,
+    label: "Figure Story",
+    description:
+      "Biographical short about a historical figure or topic. Uses figure story blueprints from the backend catalog.",
+  },
+] as const;
+
+export type MovieTypeKey = (typeof MOVIE_TYPES)[number]["key"];
+
+export function getMovieType(key: string) {
+  return MOVIE_TYPES.find((type) => type.key === key) ?? MOVIE_TYPES[0];
+}
+
 export const STYLE_PRESETS = [
   { key: "tiktok_ai_history", title: "TikTok AI History" },
   { key: "instagram_epictok", title: "Instagram Epictok" },
@@ -168,6 +184,7 @@ export const PUNCTUATION_MARKUP = [
 ] as const;
 
 export const DEFAULT_PROJECT_SETTINGS: ProjectSettings = {
+  movie_type: "figure_blueprint",
   topic: "",
   style_preset: "tiktok_ai_history",
   mode: "tiktok",

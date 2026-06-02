@@ -1,5 +1,5 @@
 import type { MovieProjectDraft } from "../types/project";
-import { getNarrator, getVisualStyleOption } from "../constants/parameters";
+import { getMovieType, getNarrator, getVisualStyleOption } from "../constants/parameters";
 import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
 import { PunctuationNotice } from "./PunctuationNotice";
@@ -44,6 +44,10 @@ export function ProjectPanel({
         <div className="project-panel__summary">
           <p className="project-panel__summary-label">Movie summary</p>
           <dl className="project-panel__summary-list">
+            <div>
+              <dt>Movie type</dt>
+              <dd>{getMovieType(draft.settings.movie_type).label}</dd>
+            </div>
             <div>
               <dt>Narrator</dt>
               <dd>{getNarrator(draft.settings.narrator).label}</dd>

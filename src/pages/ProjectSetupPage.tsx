@@ -1,7 +1,9 @@
-import type { ProjectSettings } from "../types/project";
+import type { MovieType, ProjectSettings } from "../types/project";
 import {
+  MOVIE_TYPES,
   NARRATORS,
   STYLE_PRESETS,
+  getMovieType,
   getNarrator,
   getVisualStyleOption,
 } from "../constants/parameters";
@@ -23,6 +25,7 @@ export function ProjectSetupPage({
   onContinue,
 }: ProjectSetupPageProps) {
   const narrator = getNarrator(settings.narrator);
+  const movieType = getMovieType(settings.movie_type);
   const visualStyle = getVisualStyleOption(settings.visual_style);
 
   return (
@@ -38,6 +41,17 @@ export function ProjectSetupPage({
       </div>
 
       <div className="project-setup__card">
+        <SelectField
+          label="Movie type"
+          hint={movieType.description}
+          value={settings.movie_type}
+          options={MOVIE_TYPES.map((item) => ({
+            value: item.key,
+            label: item.label,
+          }))}
+          onChange={(value) => onChange({ movie_type: value as MovieType })}
+        />
+
         <SelectField
           label="Narrator"
           hint={narrator.description}

@@ -1,6 +1,9 @@
 /** Per-beat visual mode: still image or animated video (maps to SKIP_IMAGE_TO_VIDEO / visual_delivery). */
 export type VisualStyle = "image" | "video";
 
+/** Whole-movie blueprint category — extend as backend adds pipelines. */
+export type MovieType = "figure_blueprint";
+
 /** Mirrors backend planner `audio_params` keys (planner.py). */
 export interface BeatAudioParams {
   speaker: string;
@@ -37,6 +40,8 @@ export interface BeatDraft {
 }
 
 export interface ProjectSettings {
+  /** Blueprint category for the whole movie (maps to backend pipeline family). */
+  movie_type: MovieType;
   topic: string;
   style_preset: string;
   mode: "tiktok" | "youtube_shorts";
