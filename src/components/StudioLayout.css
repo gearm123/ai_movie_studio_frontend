@@ -1,0 +1,101 @@
+.studio-shell {
+  position: relative;
+  min-height: 100vh;
+  padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 2rem;
+  overflow: hidden;
+}
+
+.studio-glow {
+  position: absolute;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+.studio-glow--left {
+  top: -8rem;
+  left: -6rem;
+  background: rgba(232, 184, 106, 0.22);
+}
+
+.studio-glow--right {
+  top: 2rem;
+  right: -10rem;
+  background: rgba(96, 132, 255, 0.18);
+}
+
+.studio-header {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto 2.5rem;
+}
+
+.studio-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.studio-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(145deg, rgba(232, 184, 106, 0.25), rgba(232, 184, 106, 0.05));
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.studio-brand__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.15rem;
+}
+
+.studio-brand__title {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.studio-header__tagline {
+  max-width: 42rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+.studio-main {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.studio-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 2.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.studio-footer__dot {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
