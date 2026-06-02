@@ -9,16 +9,7 @@ import "./App.css";
 
 function App() {
   const [step, setStep] = useState<AppStep>("landing");
-  const {
-    draft,
-    activeBeatIndex,
-    setActiveBeatIndex,
-    setBeatCount,
-    updateSettings,
-    updateBeat,
-    updateBeatAudioParam,
-    updateBeatCompositionParam,
-  } = useProjectDraft();
+  const { draft, setBeatCount, updateSettings, updateBeat } = useProjectDraft();
 
   if (step === "landing") {
     return <LandingPage onStart={() => setStep("setup")} />;
@@ -38,12 +29,8 @@ function App() {
       {step === "beats" ? (
         <ProjectPanel
           draft={draft}
-          activeBeatIndex={activeBeatIndex}
           onBeatCountChange={setBeatCount}
-          onSelectBeat={setActiveBeatIndex}
-          onBeatUpdate={updateBeat}
-          onBeatAudioParamChange={updateBeatAudioParam}
-          onBeatCompositionParamChange={updateBeatCompositionParam}
+          onBeatTextChange={(beatIndex, text) => updateBeat(beatIndex, { narration: text })}
           onBack={() => setStep("setup")}
         />
       ) : null}

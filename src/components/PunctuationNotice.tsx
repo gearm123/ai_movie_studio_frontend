@@ -6,9 +6,8 @@ export function PunctuationNotice() {
     <aside className="punctuation-notice" aria-label="Narration punctuation guidance">
       <p className="punctuation-notice__title">Punctuation guides the voice</p>
       <p className="punctuation-notice__copy">
-        Commas, periods, ellipses, and question marks shape pauses and emphasis in XTTS narration.
-        Use them deliberately — they are part of the performance, not decoration. Pair wording with the
-        beat&apos;s narration tone (voice reference WAV) for the intended emotional read.
+        Commas, periods, ellipses, and question marks shape pauses and emphasis in the narration.
+        Use them deliberately — they are part of the performance, not decoration.
       </p>
       <ul className="punctuation-notice__tags">
         {PUNCTUATION_MARKUP.map((item) => (

@@ -8,10 +8,6 @@
 }
 
 .beat-editor__header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -27,91 +23,37 @@
   font-family: "Instrument Serif", Georgia, serif;
   font-size: clamp(1.5rem, 2.5vw, 2rem);
   font-weight: 400;
+  margin: 0 0 0.5rem;
 }
 
-.beat-editor__tabs {
-  display: inline-flex;
-  padding: 0.25rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-soft);
-}
-
-.beat-editor__tab {
-  border: 0;
-  background: transparent;
+.beat-editor__copy {
+  margin: 0;
   color: var(--text-muted);
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 42rem;
 }
 
-.beat-editor__tab--active {
-  background: var(--accent-soft);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-.beat-editor__panel {
+.beat-editor__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
-.beat-editor__panel--grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.beat-editor__item {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.beat-editor__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .beat-editor__word-count {
-  margin-top: -0.35rem;
+  margin: -0.35rem 0 0;
   font-size: 0.78rem;
   color: var(--text-muted);
-}
-
-.beat-editor__silent-note {
-  margin: 0;
-  padding: 0.75rem 0.9rem;
-  border-radius: 0.65rem;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.beat-editor__visual-style {
-  display: grid;
-  gap: 0.55rem;
-}
-
-.beat-editor__visual-style-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.beat-editor__narrator-note {
-  grid-column: 1 / -1;
-  display: grid;
-  gap: 0.2rem;
-  padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.beat-editor__narrator-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.beat-editor__narrator-hint {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-@media (max-width: 760px) {
-  .beat-editor__panel--grid {
-    grid-template-columns: 1fr;
-  }
 }

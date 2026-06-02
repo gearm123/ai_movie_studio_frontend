@@ -6,8 +6,6 @@ import type { BeatAudioParams, BeatCompositionParams, BeatDraft, MovieProjectDra
 
 export function useProjectDraft(initial?: MovieProjectDraft) {
   const [draft, setDraft] = useState<MovieProjectDraft>(initial ?? createInitialDraft());
-  const [activeBeatIndex, setActiveBeatIndex] = useState(1);
-
   const setBeatCount = useCallback((beatCount: number) => {
     const count = clampBeatCount(beatCount);
     setDraft((prev) => {
@@ -22,7 +20,6 @@ export function useProjectDraft(initial?: MovieProjectDraft) {
         },
       };
     });
-    setActiveBeatIndex((current) => Math.min(current, count));
   }, []);
 
   const updateSettings = useCallback((patch: Partial<ProjectSettings>) => {
@@ -99,8 +96,6 @@ export function useProjectDraft(initial?: MovieProjectDraft) {
 
   return {
     draft,
-    activeBeatIndex,
-    setActiveBeatIndex,
     setBeatCount,
     updateSettings,
     updateBeat,
