@@ -41,12 +41,14 @@ export function useBackendConnection(enabled: boolean) {
         }
       } catch (err) {
         if (!cancelled) {
+          const origin =
+            typeof window !== "undefined" && window.location?.origin
+              ? window.location.origin
+              : "your site URL";
+          const detail = err instanceof Error ? err.message : "Unknown error";
           setConnection({
             status: "error",
-            message:
-              err instanceof Error
-                ? `${err.message} — open ${getApiBaseUrl()}/health in a new tab; on Render set CORS_ORIGINS=https://gearmstudio.netlify.app and redeploy.`
-                : `Cannot reach backend at ${getApiBaseUrl()}`,
+            message: `Cannot reach the backend at ${getApiBaseUrl()}. (${detail}) Open ${getApiBaseUrl()}/health in a new tab and wait until JSON appears (Render free tier may take ~60s to wake). On Render, set CORS_ORIGINS to include exactly ${origin} (comma-separated if you use multiple domains), then redeploy.`,
           });
         }
       }
