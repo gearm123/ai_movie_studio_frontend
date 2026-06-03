@@ -1,7 +1,9 @@
 import type { MovieProjectDraft } from "../types/project";
-import { getMovieType, getNarrator, getOutputResolution, getVisualStyleOption } from "../constants/parameters";
+import { getMovieType, getNarrator, getVisualStyleOption } from "../constants/parameters";
+import { useMovieJob } from "../hooks/useMovieJob";
 import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
+import { MovieJobPanel } from "./MovieJobPanel";
 import { PunctuationNotice } from "./PunctuationNotice";
 import "./ProjectPanel.css";
 
@@ -19,6 +21,7 @@ export function ProjectPanel({
   onBack,
 }: ProjectPanelProps) {
   const beatsFilled = draft.beats.map((beat) => Boolean(beat.narration.trim()));
+  const { job, phase, error, videoUrl, isBusy, startGeneration, reset } = useMovieJob();
 
   return (
     <div className="project-panel">
@@ -26,7 +29,7 @@ export function ProjectPanel({
         <div>
           <h2 className="project-panel__title">Your movie script</h2>
         </div>
-        <button type="button" className="project-panel__back" onClick={onBack}>
+        <button type="button" className="project-panel__back" onClick={onBack} disabled={isBusy}>
           Back to setup
         </button>
       </div>
@@ -45,6 +48,10 @@ export function ProjectPanel({
           <p className="project-panel__summary-label">Movie summary</p>
           <dl className="project-panel__summary-list">
             <div>
+              <dt>Topic</dt>
+              <dd>{draft.settings.topic.trim() || "—"}</dd>
+            </div>
+            <div>
               <dt>Movie type</dt>
               <dd>{getMovieType(draft.settings.movie_type).label}</dd>
             </div>
@@ -57,19 +64,21 @@ export function ProjectPanel({
               <dd>{getVisualStyleOption(draft.settings.visual_style).label}</dd>
             </div>
             <div>
-              <dt>Output resolution</dt>
-              <dd>{getOutputResolution(draft.settings.output_resolution).label}</dd>
-            </div>
-            <div>
               <dt>Beats with text</dt>
               <dd>
                 {beatsFilled.filter(Boolean).length} / {draft.beatCount}
               </dd>
             </div>
           </dl>
-          <button type="button" className="project-panel__cta" disabled>
-            Generate movie — backend connection next
-          </button>
+          <MovieJobPanel
+            job={job}
+            phase={phase}
+            error={error}
+            videoUrl={videoUrl}
+            isBusy={isBusy}
+            onGenerate={() => void startGeneration(draft)}
+            onReset={reset}
+          />
         </div>
       </aside>
     </div>
