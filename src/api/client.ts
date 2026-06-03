@@ -49,9 +49,7 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
     response = await fetch(apiUrl(path), { ...init, headers });
   } catch (cause) {
     const hint = isProductionBuild()
-      ? getApiBaseUrl()
-        ? `Cannot reach the backend at ${getApiBaseUrl()}. Check Render is running and CORS_ORIGINS includes your Netlify domain.`
-        : "Cannot reach the backend proxy. Open /health on this site; if 404, redeploy Netlify with netlify.toml and remove VITE_API_BASE_URL."
+      ? `Cannot reach the backend at ${getApiBaseUrl() || "(not set)"}. Check the URL, Render service is running, and CORS_ORIGINS on Render includes your Netlify domain.`
       : "Cannot reach the API. Start the backend locally and run npm run dev (Vite proxy).";
     throw new ApiError(0, cause instanceof Error ? `${hint} (${cause.message})` : hint);
   }

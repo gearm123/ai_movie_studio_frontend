@@ -46,10 +46,9 @@ export function useBackendConnection(enabled: boolean) {
               ? window.location.origin
               : "your site URL";
           const detail = err instanceof Error ? err.message : "Unknown error";
-          const healthUrl = getApiBaseUrl() ? `${getApiBaseUrl()}/health` : `${origin}/health`;
           setConnection({
             status: "error",
-            message: `Cannot reach the backend. (${detail}) Open ${healthUrl} in a new tab and wait for JSON (Render may take ~60s on first request). If you set VITE_API_BASE_URL on Netlify, remove it and redeploy so traffic uses the Netlify proxy instead of cross-origin calls to Render.`,
+            message: `Cannot reach the backend at ${getApiBaseUrl()}. (${detail}) Open ${getApiBaseUrl()}/health in a new tab and wait until JSON appears (Render free tier may take ~60s to wake). On Render, set CORS_ORIGINS to include exactly ${origin} (comma-separated if you use multiple domains), then redeploy.`,
           });
         }
       }
