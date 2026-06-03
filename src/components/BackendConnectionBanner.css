@@ -31,9 +31,23 @@
   color: #ffd4d4;
 }
 
-.backend-banner__why {
-  font-size: 0.8rem;
-  opacity: 0.9;
+.backend-banner__summary {
+  font-weight: 500;
+}
+
+.backend-banner__details {
+  margin: 0.65rem 0 0;
+  padding: 0.65rem 0.75rem;
+  max-height: 14rem;
+  overflow: auto;
+  border-radius: 0.4rem;
+  background: rgba(0, 0, 0, 0.25);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #f0e0e0;
 }
 
 .backend-banner__url {

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { checkHealth } from "../api/jobs";
-import { NETLIFY_BACKEND_SETUP_HINT, getApiBaseUrl, isBackendUrlConfigured } from "../config/api";
+import { NETLIFY_BACKEND_SETUP_HINT, isBackendUrlConfigured } from "../config/api";
+import { diagnoseBackendConnection } from "../utils/backendDiagnostics";
 
 export type BackendConnectionState =
   | { status: "checking" }
-  | { status: "misconfigured"; message: string }
+  | { status: "misconfigured"; message: string; details?: string }
   | { status: "connected"; service: string; authRequired: boolean }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string; details: string };
 
 export function useBackendConnection(enabled: boolean) {
   const [connection, setConnection] = useState<BackendConnectionState>({ status: "checking" });
@@ -39,16 +40,13 @@ export function useBackendConnection(enabled: boolean) {
             authRequired: health.auth_required,
           });
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
-          const origin =
-            typeof window !== "undefined" && window.location?.origin
-              ? window.location.origin
-              : "your site URL";
-          const detail = err instanceof Error ? err.message : "Unknown error";
+          const report = await diagnoseBackendConnection();
           setConnection({
             status: "error",
-            message: `Cannot reach the backend at ${getApiBaseUrl()}. (${detail}) Open ${getApiBaseUrl()}/health in a new tab and wait until JSON appears (Render free tier may take ~60s to wake). On Render, set CORS_ORIGINS to include exactly ${origin} (comma-separated if you use multiple domains), then redeploy.`,
+            message: report.summary,
+            details: report.details,
           });
         }
       }

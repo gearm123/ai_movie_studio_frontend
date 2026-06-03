@@ -2,32 +2,13 @@ import { apiFetch } from "./client";
 import { apiUrl, getApiKey } from "../config/api";
 import type { HealthResponse, JobCreateRequest, JobCreateResponse, JobRecord } from "./types";
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 /** Public endpoint — no API key (avoids CORS preflight on the connection check). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const url = apiUrl("/health");
-  const attempts = 4;
-  let lastError: unknown;
-
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Health check failed (${response.status})`);
-      }
-      return response.json() as Promise<HealthResponse>;
-    } catch (err) {
-      lastError = err;
-      if (attempt < attempts) {
-        await sleep(attempt === 1 ? 8000 : 12000);
-      }
-    }
+  const response = await fetch(apiUrl("/health"), { method: "GET", mode: "cors", cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Health check failed (HTTP ${response.status})`);
   }
-
-  throw lastError instanceof Error ? lastError : new Error("Health check failed");
+  return response.json() as Promise<HealthResponse>;
 }
 
 export async function createJob(request: JobCreateRequest): Promise<JobRecord> {
