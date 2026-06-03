@@ -27,11 +27,15 @@ On the setup page set **topic** (e.g. `my_mysteriosgrandfather`), fill beats, th
 
 ### Netlify + Render
 
+The site proxies `/api/*` and `/health` to Render via `netlify.toml` (same-origin — no browser CORS).
+
 | Where | Variable |
 |-------|----------|
-| Netlify | `VITE_API_BASE_URL` = `https://YOUR-SERVICE.onrender.com` |
 | Netlify | `VITE_BACKEND_API_KEY` = same as Render `BACKEND_API_KEY` |
-| Render | `CORS_ORIGINS` includes `https://gearmstudio.netlify.app` |
+| Netlify | **Do not set** `VITE_API_BASE_URL` (delete it if already set) |
+| Render | `BACKEND_API_KEY`, `GEMINI_API_KEY`, etc. (`CORS_ORIGINS` optional when using the proxy) |
+
+After deploy, `https://gearmstudio.netlify.app/health` should return JSON.
 
 ## Current UI
 

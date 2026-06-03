@@ -1,0 +1,22 @@
+# Proxy API traffic through Netlify (same-origin) so the browser never needs CORS to Render.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/health"
+  to = "https://ai-movie-studio-api.onrender.com/health"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://ai-movie-studio-api.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# SPA fallback (must come after API rules)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
