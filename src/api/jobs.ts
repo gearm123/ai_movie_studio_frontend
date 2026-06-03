@@ -2,8 +2,12 @@ import { apiFetch } from "./client";
 import { apiUrl, getApiKey } from "../config/api";
 import type { HealthResponse, JobCreateRequest, JobCreateResponse, JobRecord } from "./types";
 
+/** Public endpoint — no API key (avoids CORS preflight on the connection check). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const response = await apiFetch("/health");
+  const response = await fetch(apiUrl("/health"));
+  if (!response.ok) {
+    throw new Error(`Health check failed (${response.status})`);
+  }
   return response.json() as Promise<HealthResponse>;
 }
 

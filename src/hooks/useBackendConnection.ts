@@ -45,7 +45,7 @@ export function useBackendConnection(enabled: boolean) {
             status: "error",
             message:
               err instanceof Error
-                ? `${err.message} (API: ${getApiBaseUrl()})`
+                ? `${err.message} — open ${getApiBaseUrl()}/health in a new tab; on Render set CORS_ORIGINS=https://gearmstudio.netlify.app and redeploy.`
                 : `Cannot reach backend at ${getApiBaseUrl()}`,
           });
         }
