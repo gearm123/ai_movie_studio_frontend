@@ -3,29 +3,26 @@ import "./MovieJobPanel.css";
 
 interface MovieJobPanelProps {
   job: JobRecord | null;
-  phase: "idle" | "submitting" | "polling" | "ready" | "error";
+  phase: "idle" | "submitting" | "polling" | "loading_video" | "ready" | "error";
   error: string | null;
   logTail: string | null;
+  elapsedSeconds: number;
   videoUrl: string | null;
   isBusy: boolean;
+  isProcessing: boolean;
   onGenerate: () => void;
   onReset: () => void;
 }
-
-const STATUS_LABEL: Record<string, string> = {
-  queued: "Queued",
-  running: "Generating…",
-  succeeded: "Complete",
-  failed: "Failed",
-};
 
 export function MovieJobPanel({
   job,
   phase,
   error,
   logTail,
+  elapsedSeconds,
   videoUrl,
   isBusy,
+  isProcessing,
   onGenerate,
   onReset,
 }: MovieJobPanelProps) {
@@ -33,14 +30,22 @@ export function MovieJobPanel({
 
   return (
     <div className="movie-job">
-      <button
-        type="button"
-        className="movie-job__cta"
-        onClick={onGenerate}
-        disabled={isBusy}
-      >
-        {phase === "submitting" ? "Starting…" : phase === "polling" ? "Generating…" : "Generate movie"}
-      </button>
+      {isProcessing ? (
+        <p className="movie-job__processing-sidebar">
+          Generating… <strong>{elapsedSeconds}s</strong> — see progress in the main panel.
+        </p>
+      ) : null}
+
+      {!isProcessing ? (
+        <button
+          type="button"
+          className="movie-job__cta"
+          onClick={onGenerate}
+          disabled={isBusy}
+        >
+          Generate movie
+        </button>
+      ) : null}
 
       {error ? (
         <p className="movie-job__error" role="alert">
@@ -48,20 +53,14 @@ export function MovieJobPanel({
         </p>
       ) : null}
 
-      {job ? (
-        <p className="movie-job__status">
-          Status: <strong>{STATUS_LABEL[job.status] ?? job.status}</strong>
+      {phase === "error" && job ? (
+        <p className="movie-job__status movie-job__status--failed">
+          Last status: <strong>Failed</strong>
           {job.id ? <span className="movie-job__id"> · job {job.id.slice(0, 8)}</span> : null}
         </p>
       ) : null}
 
-      {phase === "polling" ? (
-        <p className="movie-job__hint">
-          This can take many minutes on Render (CPU). Keep this tab open. Do not click Generate again.
-        </p>
-      ) : null}
-
-      {logTail ? (
+      {phase === "error" && logTail ? (
         <pre className="movie-job__log" aria-label="Pipeline log excerpt">
           {logTail}
         </pre>
@@ -69,8 +68,8 @@ export function MovieJobPanel({
 
       {showVideo ? (
         <div className="movie-job__player-wrap">
-          <p className="movie-job__player-label">Your movie</p>
-          <video className="movie-job__player" src={videoUrl} controls playsInline />
+          <p className="movie-job__player-label">Your movie is ready</p>
+          <video className="movie-job__player" src={videoUrl} controls playsInline autoPlay />
           <a className="movie-job__download" href={videoUrl} download="movie.mp4">
             Download MP4
           </a>

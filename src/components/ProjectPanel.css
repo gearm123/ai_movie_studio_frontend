@@ -28,6 +28,23 @@
   margin: 0;
 }
 
+.project-panel__processing-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.project-panel__workspace {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-panel__workspace--dimmed .beat-editor {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .project-panel__back {
   border: 1px solid var(--border-soft);
   border-radius: 0.65rem;

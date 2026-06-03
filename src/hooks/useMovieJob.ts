@@ -10,7 +10,11 @@ const POLL_MS = 3000;
 
 export function useMovieJob() {
   const [job, setJob] = useState<JobRecord | null>(null);
-  const [phase, setPhase] = useState<"idle" | "submitting" | "polling" | "ready" | "error">("idle");
+  const [phase, setPhase] = useState<
+    "idle" | "submitting" | "polling" | "loading_video" | "ready" | "error"
+  >("idle");
+  const [processingStartedAt, setProcessingStartedAt] = useState<number | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [logTail, setLogTail] = useState<string | null>(null);
@@ -39,7 +43,15 @@ export function useMovieJob() {
     setPhase("idle");
     setError(null);
     setLogTail(null);
+    setProcessingStartedAt(null);
+    setElapsedSeconds(0);
   }, [clearPoll, revokeVideoUrl]);
+
+  const markProcessingStart = useCallback(() => {
+    const now = Date.now();
+    setProcessingStartedAt(now);
+    setElapsedSeconds(0);
+  }, []);
 
   const attachLogTail = useCallback(async (jobId: string) => {
     try {
@@ -56,6 +68,7 @@ export function useMovieJob() {
 
   const loadVideo = useCallback(
     async (jobId: string) => {
+      setPhase("loading_video");
       revokeVideoUrl();
       const blob = await fetchJobVideoBlob(jobId);
       const url = URL.createObjectURL(blob);
@@ -115,6 +128,7 @@ export function useMovieJob() {
       clearPoll();
       revokeVideoUrl();
       setLogTail(null);
+      markProcessingStart();
       setPhase("submitting");
       setError(null);
 
@@ -160,8 +174,20 @@ export function useMovieJob() {
         }
       }
     },
-    [attachLogTail, clearPoll, pollJob, revokeVideoUrl],
+    [attachLogTail, clearPoll, markProcessingStart, pollJob, revokeVideoUrl],
   );
+
+  useEffect(() => {
+    if (!processingStartedAt) {
+      return;
+    }
+    const tick = () => {
+      setElapsedSeconds(Math.floor((Date.now() - processingStartedAt) / 1000));
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [processingStartedAt]);
 
   useEffect(() => {
     return () => {
@@ -170,15 +196,19 @@ export function useMovieJob() {
     };
   }, [clearPoll, revokeVideoUrl]);
 
-  const isBusy = phase === "submitting" || phase === "polling";
+  const isBusy =
+    phase === "submitting" || phase === "polling" || phase === "loading_video";
+  const isProcessing = phase === "submitting" || phase === "polling" || phase === "loading_video";
 
   return {
     job,
     phase,
     error,
     logTail,
+    elapsedSeconds,
     videoUrl,
     isBusy,
+    isProcessing,
     startGeneration,
     reset,
   };

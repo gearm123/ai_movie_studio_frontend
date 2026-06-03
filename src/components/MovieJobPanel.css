@@ -3,6 +3,21 @@
   gap: 0.75rem;
 }
 
+.movie-job__processing-sidebar {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(232, 184, 106, 0.35);
+  background: rgba(232, 184, 106, 0.08);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.movie-job__processing-sidebar strong {
+  color: var(--accent);
+}
+
 .movie-job__cta {
   width: 100%;
   padding: 0.85rem 1rem;
@@ -40,6 +55,10 @@
   margin: 0;
   font-size: 0.82rem;
   color: var(--text-muted);
+}
+
+.movie-job__status--failed strong {
+  color: #f0b0b0;
 }
 
 .movie-job__log {

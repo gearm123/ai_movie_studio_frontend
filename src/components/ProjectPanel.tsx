@@ -5,6 +5,7 @@ import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
 import { MovieJobPanel } from "./MovieJobPanel";
 import { PunctuationNotice } from "./PunctuationNotice";
+import { VideoProcessingCard } from "./VideoProcessingCard";
 import "./ProjectPanel.css";
 
 interface ProjectPanelProps {
@@ -21,13 +22,30 @@ export function ProjectPanel({
   onBack,
 }: ProjectPanelProps) {
   const beatsFilled = draft.beats.map((beat) => Boolean(beat.narration.trim()));
-  const { job, phase, error, logTail, videoUrl, isBusy, startGeneration, reset } = useMovieJob();
+  const {
+    job,
+    phase,
+    error,
+    logTail,
+    elapsedSeconds,
+    videoUrl,
+    isBusy,
+    isProcessing,
+    startGeneration,
+    reset,
+  } = useMovieJob();
+
+  const showMainProcessing =
+    phase === "submitting" || phase === "polling" || phase === "loading_video";
 
   return (
     <div className="project-panel">
       <div className="project-panel__top">
         <div>
           <h2 className="project-panel__title">Your movie script</h2>
+          {isProcessing ? (
+            <p className="project-panel__processing-note">Video generation in progress</p>
+          ) : null}
         </div>
         <button type="button" className="project-panel__back" onClick={onBack} disabled={isBusy}>
           Back to setup
@@ -38,7 +56,21 @@ export function ProjectPanel({
         <BeatSelector beatCount={draft.beatCount} onChange={onBeatCountChange} />
       </div>
 
-      <div className="project-panel__workspace">
+      <div
+        className={
+          isProcessing
+            ? "project-panel__workspace project-panel__workspace--dimmed"
+            : "project-panel__workspace"
+        }
+      >
+        {showMainProcessing ? (
+          <VideoProcessingCard
+            phase={phase}
+            job={job}
+            elapsedSeconds={elapsedSeconds}
+            logTail={logTail}
+          />
+        ) : null}
         <BeatEditor beats={draft.beats} onBeatTextChange={onBeatTextChange} />
       </div>
 
@@ -75,8 +107,10 @@ export function ProjectPanel({
             phase={phase}
             error={error}
             logTail={logTail}
+            elapsedSeconds={elapsedSeconds}
             videoUrl={videoUrl}
             isBusy={isBusy}
+            isProcessing={isProcessing}
             onGenerate={() => void startGeneration(draft)}
             onReset={reset}
           />
