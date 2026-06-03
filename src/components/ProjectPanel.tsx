@@ -21,7 +21,7 @@ export function ProjectPanel({
   onBack,
 }: ProjectPanelProps) {
   const beatsFilled = draft.beats.map((beat) => Boolean(beat.narration.trim()));
-  const { job, phase, error, videoUrl, isBusy, startGeneration, reset } = useMovieJob();
+  const { job, phase, error, logTail, videoUrl, isBusy, startGeneration, reset } = useMovieJob();
 
   return (
     <div className="project-panel">
@@ -74,6 +74,7 @@ export function ProjectPanel({
             job={job}
             phase={phase}
             error={error}
+            logTail={logTail}
             videoUrl={videoUrl}
             isBusy={isBusy}
             onGenerate={() => void startGeneration(draft)}

@@ -29,10 +29,32 @@
   line-height: 1.45;
 }
 
+.movie-job__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
 .movie-job__status {
   margin: 0;
   font-size: 0.82rem;
   color: var(--text-muted);
+}
+
+.movie-job__log {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  max-height: 10rem;
+  overflow: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-soft);
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .movie-job__id {

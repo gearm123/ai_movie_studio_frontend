@@ -5,6 +5,7 @@ interface MovieJobPanelProps {
   job: JobRecord | null;
   phase: "idle" | "submitting" | "polling" | "ready" | "error";
   error: string | null;
+  logTail: string | null;
   videoUrl: string | null;
   isBusy: boolean;
   onGenerate: () => void;
@@ -22,6 +23,7 @@ export function MovieJobPanel({
   job,
   phase,
   error,
+  logTail,
   videoUrl,
   isBusy,
   onGenerate,
@@ -49,8 +51,20 @@ export function MovieJobPanel({
       {job ? (
         <p className="movie-job__status">
           Status: <strong>{STATUS_LABEL[job.status] ?? job.status}</strong>
-          {job.id ? <span className="movie-job__id"> · {job.id.slice(0, 8)}</span> : null}
+          {job.id ? <span className="movie-job__id"> · job {job.id.slice(0, 8)}</span> : null}
         </p>
+      ) : null}
+
+      {phase === "polling" ? (
+        <p className="movie-job__hint">
+          This can take many minutes on Render (CPU). Keep this tab open. Do not click Generate again.
+        </p>
+      ) : null}
+
+      {logTail ? (
+        <pre className="movie-job__log" aria-label="Pipeline log excerpt">
+          {logTail}
+        </pre>
       ) : null}
 
       {showVideo ? (
