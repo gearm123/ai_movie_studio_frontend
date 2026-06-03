@@ -46,7 +46,7 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 
   let response: Response;
   try {
-    response = await fetch(apiUrl(path), { ...init, headers });
+    response = await fetch(apiUrl(path), { ...init, headers, credentials: "omit" });
   } catch (cause) {
     const hint = isProductionBuild()
       ? `Cannot reach the backend at ${getApiBaseUrl() || "(not set)"}. Check the URL, Render service is running, and CORS_ORIGINS on Render includes your Netlify domain.`

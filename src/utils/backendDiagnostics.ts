@@ -49,13 +49,18 @@ export async function diagnoseBackendConnection(): Promise<BackendDiagnosticRepo
   }
 
   let corsGetFailed = false;
-  let opaqueReachable = false;
   let acaoOnSuccess: string | null = null;
+  const hostLooksLikeApi = /(^|[.-])api([.-]|$)/i.test(new URL(healthUrl).hostname);
 
   // 1) Normal browser request (what the app uses)
   try {
     const t0 = performance.now();
-    const res = await fetch(healthUrl, { method: "GET", mode: "cors", cache: "no-store" });
+    const res = await fetch(healthUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "omit",
+      cache: "no-store",
+    });
     const ms = Math.round(performance.now() - t0);
     acaoOnSuccess = res.headers.get("access-control-allow-origin");
     const acac = res.headers.get("access-control-allow-credentials");
@@ -96,25 +101,15 @@ export async function diagnoseBackendConnection(): Promise<BackendDiagnosticRepo
   }
 
   lines.push("");
-
-  // 2) no-cors probe: did the host answer at all?
-  try {
-    const t0 = performance.now();
-    const res = await fetch(healthUrl, { method: "GET", mode: "no-cors", cache: "no-store" });
-    const ms = Math.round(performance.now() - t0);
-    lines.push(`[2] GET /health (no-cors mode) → response.type=${res.type}, status=${res.status} in ${ms}ms`);
-    if (res.type === "opaque") {
-      opaqueReachable = true;
-      lines.push("    Host answered on the network; readable response blocked (typical CORS).");
-    }
-  } catch (err) {
-    lines.push("[2] GET /health (no-cors mode) → FAILED");
-    lines.push(`    ${formatError(err).replace(/\n/g, "\n    ")}`);
+  if (hostLooksLikeApi) {
+    lines.push(
+      "[note] Hostname contains “api” (e.g. ai-movie-studio-api.onrender.com).",
+      "       Many ad blockers block *-api* hosts — disable for this site or use incognito.",
+    );
+    lines.push("");
   }
 
-  lines.push("");
-
-  // 3) Request with API key (triggers CORS preflight on some browsers)
+  // 2) Request with API key (triggers CORS preflight)
   try {
     const headers = new Headers();
     const key = getApiKey();
@@ -122,13 +117,19 @@ export async function diagnoseBackendConnection(): Promise<BackendDiagnosticRepo
       headers.set("X-API-Key", key);
     }
     const t0 = performance.now();
-    const res = await fetch(healthUrl, { method: "GET", mode: "cors", headers, cache: "no-store" });
+    const res = await fetch(healthUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "omit",
+      headers,
+      cache: "no-store",
+    });
     const ms = Math.round(performance.now() - t0);
     const acao = res.headers.get("access-control-allow-origin");
-    lines.push(`[3] GET /health + X-API-Key header → HTTP ${res.status} in ${ms}ms`);
+    lines.push(`[2] GET /health + X-API-Key header → HTTP ${res.status} in ${ms}ms`);
     lines.push(`    Access-Control-Allow-Origin: ${acao ?? "(missing)"}`);
   } catch (err) {
-    lines.push("[3] GET /health + X-API-Key header → FAILED");
+    lines.push("[2] GET /health + X-API-Key header → FAILED");
     lines.push(`    ${formatError(err).replace(/\n/g, "\n    ")}`);
     lines.push("    (Custom headers require a successful OPTIONS preflight.)");
   }
@@ -136,27 +137,22 @@ export async function diagnoseBackendConnection(): Promise<BackendDiagnosticRepo
   lines.push("");
   lines.push("=== Likely cause ===");
 
-  if (corsGetFailed && opaqueReachable) {
+  if (corsGetFailed) {
     lines.push(
-      "Render is up, but CORS headers do not allow this site origin.",
-      `Set CORS_ORIGINS=${origin} on Render and redeploy.`,
+      "Server-side CORS on Render may already be correct (CORS_ORIGINS with your Netlify URL).",
+      "“Failed to fetch” in the browser is often:",
+      "  • Ad blocker / privacy extension (especially hosts with “api” in the name)",
+      "  • Cached failed CORS preflight — try Incognito or wait 10 minutes",
+      "  • DevTools → Network → health → Status may show (blocked:other) or (failed)",
+      "",
+      `If Render env is missing: CORS_ORIGINS=${origin}`,
+      "Test in DevTools Console on this page:",
+      `  fetch("${healthUrl}").then(r=>r.json()).then(console.log)`,
     );
-    return {
-      summary: `CORS blocked: server reachable but origin "${origin}" not allowed.`,
-      details: lines.join("\n"),
-    };
-  }
-
-  if (corsGetFailed && !opaqueReachable) {
-    lines.push(
-      "Browser could not complete a request to Render (not a CORS header issue).",
-      "Common causes: Render service asleep (open /health in a tab, wait ~60s), DNS/ad blocker,",
-      "wrong VITE_API_BASE_URL, or SSL/network failure.",
-    );
-    return {
-      summary: "Network blocked or Render unreachable (not CORS) — wake Render via /health tab.",
-      details: lines.join("\n"),
-    };
+    const summary = hostLooksLikeApi
+      ? "Browser blocked the request (ad blocker often blocks *-api* hostnames on Render)."
+      : `Browser blocked cross-origin fetch to Render (check extensions; CORS_ORIGINS=${origin} on Render).`;
+    return { summary, details: lines.join("\n") };
   }
 
   if (acaoOnSuccess) {

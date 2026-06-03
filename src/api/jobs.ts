@@ -4,7 +4,12 @@ import type { HealthResponse, JobCreateRequest, JobCreateResponse, JobRecord } f
 
 /** Public endpoint — no API key (avoids CORS preflight on the connection check). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const response = await fetch(apiUrl("/health"), { method: "GET", mode: "cors", cache: "no-store" });
+  const response = await fetch(apiUrl("/health"), {
+    method: "GET",
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store",
+  });
   if (!response.ok) {
     throw new Error(`Health check failed (HTTP ${response.status})`);
   }
