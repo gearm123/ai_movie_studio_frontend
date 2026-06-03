@@ -1,4 +1,11 @@
-import { apiUrl, getApiKey } from "../config/api";
+import {
+  NETLIFY_BACKEND_SETUP_HINT,
+  apiUrl,
+  getApiBaseUrl,
+  getApiKey,
+  isBackendUrlConfigured,
+  isProductionBuild,
+} from "../config/api";
 
 export class ApiError extends Error {
   status: number;
@@ -10,7 +17,24 @@ export class ApiError extends Error {
   }
 }
 
+function misconfiguredMessage(status: number): string | null {
+  if (isProductionBuild() && !isBackendUrlConfigured()) {
+    return `Backend URL is not configured for this Netlify build. ${NETLIFY_BACKEND_SETUP_HINT}`;
+  }
+  if (isProductionBuild() && status === 404) {
+    return `Backend returned 404. Check VITE_API_BASE_URL (currently “${getApiBaseUrl() || "not set"}”). ${NETLIFY_BACKEND_SETUP_HINT}`;
+  }
+  if (status === 401) {
+    return "Invalid or missing API key. Set VITE_BACKEND_API_KEY on Netlify to match BACKEND_API_KEY on Render, then redeploy.";
+  }
+  return null;
+}
+
 export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  if (isProductionBuild() && !isBackendUrlConfigured()) {
+    throw new ApiError(0, misconfiguredMessage(0) ?? "Backend URL not configured.");
+  }
+
   const headers = new Headers(init.headers);
   if (!headers.has("Content-Type") && init.body) {
     headers.set("Content-Type", "application/json");
@@ -19,7 +43,17 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
   if (key) {
     headers.set("X-API-Key", key);
   }
-  const response = await fetch(apiUrl(path), { ...init, headers });
+
+  let response: Response;
+  try {
+    response = await fetch(apiUrl(path), { ...init, headers });
+  } catch (cause) {
+    const hint = isProductionBuild()
+      ? `Cannot reach the backend at ${getApiBaseUrl() || "(not set)"}. Check the URL, Render service is running, and CORS_ORIGINS on Render includes your Netlify domain.`
+      : "Cannot reach the API. Start the backend locally and run npm run dev (Vite proxy).";
+    throw new ApiError(0, cause instanceof Error ? `${hint} (${cause.message})` : hint);
+  }
+
   if (!response.ok) {
     let detail = response.statusText;
     try {
@@ -30,7 +64,8 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
     } catch {
       /* ignore */
     }
-    throw new ApiError(response.status, detail);
+    const configured = misconfiguredMessage(response.status);
+    throw new ApiError(response.status, configured ?? detail);
   }
   return response;
 }

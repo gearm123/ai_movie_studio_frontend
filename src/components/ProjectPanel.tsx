@@ -1,6 +1,9 @@
 import type { MovieProjectDraft } from "../types/project";
 import { getMovieType, getNarrator, getVisualStyleOption } from "../constants/parameters";
+import { useBackendConnection } from "../hooks/useBackendConnection";
 import { useMovieJob } from "../hooks/useMovieJob";
+import { BackendConnectionBanner } from "./BackendConnectionBanner";
+import { isBackendUrlConfigured } from "../config/api";
 import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
 import { MovieJobPanel } from "./MovieJobPanel";
@@ -34,6 +37,10 @@ export function ProjectPanel({
     startGeneration,
     reset,
   } = useMovieJob();
+  const backendConnection = useBackendConnection(true);
+  const canGenerate =
+    isBackendUrlConfigured() &&
+    backendConnection.status === "connected";
 
   const showMainProcessing =
     phase === "submitting" || phase === "polling" || phase === "loading_video";
@@ -75,6 +82,7 @@ export function ProjectPanel({
       </div>
 
       <aside className="project-panel__aside">
+        <BackendConnectionBanner connection={backendConnection} />
         <PunctuationNotice />
         <div className="project-panel__summary">
           <p className="project-panel__summary-label">Movie summary</p>
@@ -111,6 +119,7 @@ export function ProjectPanel({
             videoUrl={videoUrl}
             isBusy={isBusy}
             isProcessing={isProcessing}
+            canGenerate={canGenerate}
             onGenerate={() => void startGeneration(draft)}
             onReset={reset}
           />

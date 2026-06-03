@@ -3,6 +3,7 @@ import { ApiError } from "../api/client";
 import { createJob, fetchJobVideoBlob, getJob, getJobLog } from "../api/jobs";
 import type { JobRecord, JobStatus } from "../api/types";
 import type { MovieProjectDraft } from "../types/project";
+import { isBackendUrlConfigured, NETLIFY_BACKEND_SETUP_HINT } from "../config/api";
 import { draftToJobRequest, validateDraftForJob } from "../utils/jobRequest";
 
 const TERMINAL: JobStatus[] = ["succeeded", "failed"];
@@ -122,6 +123,12 @@ export function useMovieJob() {
       if (validationError) {
         setPhase("error");
         setError(validationError);
+        return;
+      }
+
+      if (!isBackendUrlConfigured()) {
+        setPhase("error");
+        setError(`Backend URL is not configured. ${NETLIFY_BACKEND_SETUP_HINT}`);
         return;
       }
 

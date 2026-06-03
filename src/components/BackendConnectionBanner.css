@@ -1,0 +1,45 @@
+.backend-banner {
+  padding: 0.75rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.backend-banner--checking {
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+}
+
+.backend-banner--ok {
+  border: 1px solid rgba(120, 200, 140, 0.35);
+  background: rgba(120, 200, 140, 0.08);
+  color: #b8e6c0;
+}
+
+.backend-banner--error {
+  border: 1px solid rgba(220, 80, 80, 0.5);
+  background: rgba(220, 80, 80, 0.1);
+  color: #f5d0d0;
+}
+
+.backend-banner--error p {
+  margin: 0.45rem 0 0;
+}
+
+.backend-banner--error strong {
+  color: #ffd4d4;
+}
+
+.backend-banner__why {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.backend-banner__url {
+  opacity: 0.85;
+}
+
+.backend-banner code {
+  font-size: 0.78rem;
+}

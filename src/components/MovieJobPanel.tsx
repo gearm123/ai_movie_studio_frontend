@@ -10,6 +10,7 @@ interface MovieJobPanelProps {
   videoUrl: string | null;
   isBusy: boolean;
   isProcessing: boolean;
+  canGenerate: boolean;
   onGenerate: () => void;
   onReset: () => void;
 }
@@ -23,6 +24,7 @@ export function MovieJobPanel({
   videoUrl,
   isBusy,
   isProcessing,
+  canGenerate,
   onGenerate,
   onReset,
 }: MovieJobPanelProps) {
@@ -41,7 +43,7 @@ export function MovieJobPanel({
           type="button"
           className="movie-job__cta"
           onClick={onGenerate}
-          disabled={isBusy}
+          disabled={isBusy || !canGenerate}
         >
           Generate movie
         </button>
