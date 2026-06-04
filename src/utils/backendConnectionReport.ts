@@ -158,12 +158,38 @@ export async function probeHealthConnection(): Promise<HealthProbeResult> {
     }
 
     const data = (await response.json()) as HealthResponse;
-    lines.push(`  Body: status=${data.status}, service=${data.service}`);
+    lines.push(`  Body: ${JSON.stringify(data).slice(0, 120)}`);
+    if (data.service !== "ai-movie-studio" || data.status !== "ok") {
+      lines.push("");
+      lines.push("=== Wrong app on this Render URL ===");
+      lines.push(
+        "Expected: {\"status\":\"ok\",\"service\":\"ai-movie-studio\",...} (AI Movie Studio FastAPI).",
+      );
+      lines.push(
+        "This URL is running a different service. On Render → ai-movie-studio-backend → Settings:",
+      );
+      lines.push("  Repo: gearm123/ai_movie_studio  Branch: trunk");
+      lines.push("  Root directory: project/ai_history_realtime_project");
+      lines.push("  Build: pip install -r requirements-render.txt");
+      lines.push("  Start: python -m backend");
+      lines.push("Then Manual Deploy.");
+      return {
+        ok: false,
+        report: {
+          summary: "Render URL responds but it is not the AI Movie Studio API.",
+          lines,
+          consoleDetail: { origin, apiBase, healthUrl, body: data },
+        },
+      };
+    }
     return { ok: true, data, elapsedMs };
   } catch (err) {
     const elapsedMs = Math.round(performance.now() - t0);
     const fe = formatFetchError(err);
     lines.push(`[fetch] threw after ${elapsedMs}ms`);
+    if (elapsedMs > 15_000) {
+      lines.push("  (long delay — Render cold start, or browser could not reach this host)");
+    }
     lines.push(`  ${fe.name}: ${fe.message}`);
     if (fe.cause) {
       lines.push(`  cause: ${fe.cause}`);
