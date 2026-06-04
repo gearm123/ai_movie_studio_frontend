@@ -1,12 +1,12 @@
-# Same pattern as translate-chat-frontend: bake API URL at build, SPA fallback only.
+# Same pattern as translate-chat-frontend (direct API URL, no proxy).
 [build]
   command = "npm run build"
   publish = "dist"
 
 [build.environment]
-  VITE_API_BASE_URL = "https://ai-movie-studio-api.onrender.com"
+  VITE_API_BASE_URL = "https://ai-movie-studio-backend.onrender.com"
 
-# On Render set CORS_ORIGINS (or FRONTEND_URL) to https://gearmstudio.netlify.app (no trailing slash).
+# Render: CORS_ORIGINS=https://gearmstudio.netlify.app
 
 [[redirects]]
   from = "/*"

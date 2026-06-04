@@ -29,7 +29,7 @@ On the setup page set **topic** (e.g. `my_mysteriosgrandfather`), fill beats, th
 
 | Where | Variable |
 |-------|----------|
-| Netlify | `VITE_API_BASE_URL` = `https://ai-movie-studio-api.onrender.com` |
+| Netlify | `VITE_API_BASE_URL` = `https://ai-movie-studio-backend.onrender.com` |
 | Netlify | `VITE_BACKEND_API_KEY` = same as Render `BACKEND_API_KEY` |
 | Render | `CORS_ORIGINS` = `https://gearmstudio.netlify.app` (or `FRONTEND_URL`) |
 

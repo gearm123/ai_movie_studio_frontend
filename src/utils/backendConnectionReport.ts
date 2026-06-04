@@ -56,7 +56,7 @@ function classifyFailure(
     }
     const apiHost = getApiBaseUrl();
     if (apiHost.includes("-api.") || apiHost.includes(".api.")) {
-      return "Failed to fetch — common with *-api* hostnames (ad blockers). Try Incognito or allowlist onrender.com.";
+      return "Failed to fetch — hostnames with “-api” are often blocked. Use ai-movie-studio-backend.onrender.com (like translate-chat-backend).";
     }
     return "Failed to fetch — often CORS (wrong origin on Render) OR blocked request (403). Check DevTools → Network → health.";
   }
