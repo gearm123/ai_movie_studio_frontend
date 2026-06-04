@@ -20,11 +20,11 @@ export class HealthCheckError extends Error {
 /** Public endpoint — no API key (same as translate-chat fetchHealth). */
 export async function checkHealth(): Promise<HealthResponse> {
   const result = await probeHealthConnection();
-  if (result.ok) {
-    return result.data;
+  if (!result.ok) {
+    logConnectionFailure(result.report);
+    throw new HealthCheckError(result.report);
   }
-  logConnectionFailure(result.report);
-  throw new HealthCheckError(result.report);
+  return result.data;
 }
 
 export async function createJob(request: JobCreateRequest): Promise<JobRecord> {
