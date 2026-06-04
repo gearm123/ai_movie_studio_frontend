@@ -1,18 +1,30 @@
 import { apiFetch } from "./client";
-import { apiUrl, getApiBaseUrl, getApiKey } from "../config/api";
+import { getApiBaseUrl, getApiKey } from "../config/api";
+import {
+  logConnectionFailure,
+  probeHealthConnection,
+  type ConnectionFailureReport,
+} from "../utils/backendConnectionReport";
 import type { HealthResponse, JobCreateRequest, JobCreateResponse, JobRecord } from "./types";
+
+export class HealthCheckError extends Error {
+  report: ConnectionFailureReport;
+
+  constructor(report: ConnectionFailureReport) {
+    super(report.summary);
+    this.name = "HealthCheckError";
+    this.report = report;
+  }
+}
 
 /** Public endpoint — no API key (same as translate-chat fetchHealth). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const base = getApiBaseUrl();
-  if (!base) {
-    throw new Error("VITE_API_BASE_URL is not set");
+  const result = await probeHealthConnection();
+  if (result.ok) {
+    return result.data;
   }
-  const response = await fetch(`${base}/health`);
-  if (!response.ok) {
-    throw new Error(`Health failed: ${response.status}`);
-  }
-  return response.json() as Promise<HealthResponse>;
+  logConnectionFailure(result.report);
+  throw new HealthCheckError(result.report);
 }
 
 export async function createJob(request: JobCreateRequest): Promise<JobRecord> {
@@ -35,7 +47,9 @@ export async function getJobLog(jobId: string): Promise<string> {
 }
 
 export function jobVideoUrl(jobId: string): string {
-  return apiUrl(`/api/v1/jobs/${jobId}/video`);
+  const base = getApiBaseUrl();
+  const path = `/api/v1/jobs/${jobId}/video`;
+  return base ? `${base}${path}` : path;
 }
 
 /** Fetch MP4 with API key for in-browser playback (video src cannot send headers). */

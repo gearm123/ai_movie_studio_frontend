@@ -22,7 +22,7 @@ export function BackendConnectionBanner({ connection }: BackendConnectionBannerP
         {getApiBaseUrl() ? (
           <span className="backend-banner__url"> · {getApiBaseUrl()}</span>
         ) : null}
-        {connection.authRequired ? " · API key required" : null}
+        {connection.authRequired ? " · API key required for jobs" : null}
       </div>
     );
   }
@@ -31,11 +31,20 @@ export function BackendConnectionBanner({ connection }: BackendConnectionBannerP
     connection.status === "misconfigured" || connection.status === "error"
       ? connection.message
       : "";
+  const details = connection.status === "error" ? connection.details : undefined;
 
   return (
     <div className="backend-banner backend-banner--error" role="alert">
       <strong>Backend not reachable</strong>
-      <p>{message}</p>
+      <p className="backend-banner__summary">{message}</p>
+      {details ? (
+        <>
+          <p className="backend-banner__hint">
+            Full report is also in DevTools → <strong>Console</strong> (filter: AI Movie Studio).
+          </p>
+          <pre className="backend-banner__details">{details}</pre>
+        </>
+      ) : null}
     </div>
   );
 }

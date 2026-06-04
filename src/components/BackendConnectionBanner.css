@@ -35,6 +35,11 @@
   font-weight: 500;
 }
 
+.backend-banner__hint {
+  font-size: 0.78rem;
+  opacity: 0.9;
+}
+
 .backend-banner__details {
   margin: 0.65rem 0 0;
   padding: 0.65rem 0.75rem;
