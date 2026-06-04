@@ -1,4 +1,4 @@
-﻿# Browser requests stay on gearmstudio.netlify.app (same-origin).
+# Browser requests stay on gearmstudio.netlify.app (same-origin).
 # Netlify forwards /health and /api to Render server-side (avoids 403/CORS from cross-origin fetch).
 [build]
   command = "npm run build"
