@@ -1,4 +1,4 @@
-/** Empty in dev → same-origin `/api` (Vite proxy). Set on Netlify to your Render backend URL. */
+/** Empty → same-origin `/api` and `/health` (Vite dev proxy or Netlify netlify.toml). */
 export function getApiBaseUrl(): string {
   const raw = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() ?? "";
   return raw.replace(/\/$/, "");
