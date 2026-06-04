@@ -12,12 +12,12 @@ export function isProductionBuild(): boolean {
   return import.meta.env.PROD;
 }
 
-/** Netlify builds must set VITE_API_BASE_URL or requests hit the static site (404), not Render. */
+/**
+ * Production: empty VITE_API_BASE_URL uses netlify.toml proxy (/api, /health on same host).
+ * Set VITE_API_BASE_URL only for direct cross-origin calls to Render.
+ */
 export function isBackendUrlConfigured(): boolean {
-  if (!isProductionBuild()) {
-    return true;
-  }
-  return Boolean(getApiBaseUrl());
+  return true;
 }
 
 export function apiUrl(path: string): string {
@@ -27,4 +27,4 @@ export function apiUrl(path: string): string {
 }
 
 export const NETLIFY_BACKEND_SETUP_HINT =
-  "In Netlify → Site configuration → Environment variables, set VITE_API_BASE_URL to your Render URL (e.g. https://ai-movie-studio-api.onrender.com) and VITE_BACKEND_API_KEY to match Render BACKEND_API_KEY, then trigger a new deploy.";
+  "In Netlify → Environment variables: set VITE_BACKEND_API_KEY (matches Render). Leave VITE_API_BASE_URL unset so /api and /health use the Netlify proxy in netlify.toml. Then redeploy.";

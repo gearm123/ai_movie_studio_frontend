@@ -1,0 +1,22 @@
+﻿# Browser requests stay on gearmstudio.netlify.app (same-origin).
+# Netlify forwards /health and /api to Render server-side (avoids 403/CORS from cross-origin fetch).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/health"
+  to = "https://ai-movie-studio-api.onrender.com/health"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://ai-movie-studio-api.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -139,19 +139,20 @@ export async function diagnoseBackendConnection(): Promise<BackendDiagnosticRepo
 
   if (corsGetFailed) {
     lines.push(
-      "Server-side CORS on Render may already be correct (CORS_ORIGINS with your Netlify URL).",
-      "“Failed to fetch” in the browser is often:",
-      "  • Ad blocker / privacy extension (especially hosts with “api” in the name)",
-      "  • Cached failed CORS preflight — try Incognito or wait 10 minutes",
-      "  • DevTools → Network → health → Status may show (blocked:other) or (failed)",
+      "If DevTools shows HTTP 403 + “No Access-Control-Allow-Origin”, the response did NOT come",
+      "from your FastAPI app (blocked by Cloudflare, ad blocker, or edge filter).",
       "",
-      `If Render env is missing: CORS_ORIGINS=${origin}`,
-      "Test in DevTools Console on this page:",
-      `  fetch("${healthUrl}").then(r=>r.json()).then(console.log)`,
+      "Fix: leave VITE_API_BASE_URL unset and use the Netlify proxy (netlify.toml) so",
+      "requests go to this site (/health, /api/...) instead of cross-origin to onrender.com.",
+      "",
+      "Or disable the blocker for ai-movie-studio-api.onrender.com.",
+      "",
+      "Test same-origin (after proxy deploy, VITE_API_BASE_URL unset):",
+      `  fetch("${apiUrl("/health")}").then(r=>r.json()).then(console.log)`,
     );
     const summary = hostLooksLikeApi
-      ? "Browser blocked the request (ad blocker often blocks *-api* hostnames on Render)."
-      : `Browser blocked cross-origin fetch to Render (check extensions; CORS_ORIGINS=${origin} on Render).`;
+      ? "Cross-origin request blocked (403) — use Netlify proxy or whitelist Render host."
+      : "Cross-origin request blocked before Render — use Netlify proxy or check DevTools status.";
     return { summary, details: lines.join("\n") };
   }
 
