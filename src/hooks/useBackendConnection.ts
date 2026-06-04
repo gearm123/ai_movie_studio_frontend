@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { checkHealth } from "../api/jobs";
-import { NETLIFY_BACKEND_SETUP_HINT, isBackendUrlConfigured } from "../config/api";
-import { diagnoseBackendConnection } from "../utils/backendDiagnostics";
+import { NETLIFY_BACKEND_SETUP_HINT, getApiBaseUrl, isBackendUrlConfigured } from "../config/api";
 
 export type BackendConnectionState =
   | { status: "checking" }
-  | { status: "misconfigured"; message: string; details?: string }
+  | { status: "misconfigured"; message: string }
   | { status: "connected"; service: string; authRequired: boolean }
-  | { status: "error"; message: string; details: string };
+  | { status: "error"; message: string };
 
 export function useBackendConnection(enabled: boolean) {
   const [connection, setConnection] = useState<BackendConnectionState>({ status: "checking" });
@@ -24,7 +23,7 @@ export function useBackendConnection(enabled: boolean) {
         if (!cancelled) {
           setConnection({
             status: "misconfigured",
-            message: `Backend URL is not set for this site build. ${NETLIFY_BACKEND_SETUP_HINT}`,
+            message: `VITE_API_BASE_URL is not set for this build. ${NETLIFY_BACKEND_SETUP_HINT}`,
           });
         }
         return;
@@ -40,13 +39,12 @@ export function useBackendConnection(enabled: boolean) {
             authRequired: health.auth_required,
           });
         }
-      } catch {
+      } catch (err) {
         if (!cancelled) {
-          const report = await diagnoseBackendConnection();
+          const detail = err instanceof Error ? err.message : "Unknown error";
           setConnection({
             status: "error",
-            message: report.summary,
-            details: report.details,
+            message: `Cannot reach ${getApiBaseUrl()}/health — ${detail}. ${NETLIFY_BACKEND_SETUP_HINT}`,
           });
         }
       }

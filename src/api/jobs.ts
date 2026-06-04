@@ -1,17 +1,16 @@
 import { apiFetch } from "./client";
-import { apiUrl, getApiKey } from "../config/api";
+import { apiUrl, getApiBaseUrl, getApiKey } from "../config/api";
 import type { HealthResponse, JobCreateRequest, JobCreateResponse, JobRecord } from "./types";
 
-/** Public endpoint — no API key (avoids CORS preflight on the connection check). */
+/** Public endpoint — no API key (same as translate-chat fetchHealth). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const response = await fetch(apiUrl("/health"), {
-    method: "GET",
-    mode: "cors",
-    credentials: "omit",
-    cache: "no-store",
-  });
+  const base = getApiBaseUrl();
+  if (!base) {
+    throw new Error("VITE_API_BASE_URL is not set");
+  }
+  const response = await fetch(`${base}/health`);
   if (!response.ok) {
-    throw new Error(`Health check failed (HTTP ${response.status})`);
+    throw new Error(`Health failed: ${response.status}`);
   }
   return response.json() as Promise<HealthResponse>;
 }

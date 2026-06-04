@@ -1,7 +1,10 @@
-/** Empty → same-origin `/api` and `/health` (Vite dev proxy or Netlify netlify.toml). */
+/** Backend base URL, no trailing slash. Set in `.env` / Netlify as VITE_API_BASE_URL */
 export function getApiBaseUrl(): string {
-  const raw = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() ?? "";
-  return raw.replace(/\/$/, "");
+  const base = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (base?.trim()) {
+    return base.trim().replace(/\/$/, "");
+  }
+  return "";
 }
 
 export function getApiKey(): string {
@@ -12,12 +15,8 @@ export function isProductionBuild(): boolean {
   return import.meta.env.PROD;
 }
 
-/**
- * Production: empty VITE_API_BASE_URL uses netlify.toml proxy (/api, /health on same host).
- * Set VITE_API_BASE_URL only for direct cross-origin calls to Render.
- */
 export function isBackendUrlConfigured(): boolean {
-  return true;
+  return Boolean(getApiBaseUrl());
 }
 
 export function apiUrl(path: string): string {
@@ -27,4 +26,4 @@ export function apiUrl(path: string): string {
 }
 
 export const NETLIFY_BACKEND_SETUP_HINT =
-  "In Netlify → Environment variables: set VITE_BACKEND_API_KEY (matches Render). Leave VITE_API_BASE_URL unset so /api and /health use the Netlify proxy in netlify.toml. Then redeploy.";
+  "Netlify: VITE_API_BASE_URL = your Render URL (HTTPS, no trailing slash). Render: CORS_ORIGINS = https://gearmstudio.netlify.app (and FRONTEND_URL if you use one). Redeploy both after changes.";

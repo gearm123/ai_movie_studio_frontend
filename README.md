@@ -25,17 +25,13 @@ powershell -File scripts\run-backend.ps1
 
 On the setup page set **topic** (e.g. `my_mysteriosgrandfather`), fill beats, then **Generate movie**. The player appears when the job succeeds.
 
-### Netlify + Render
-
-`netlify.toml` proxies `/api/*` and `/health` to Render (same-origin in the browser).
+### Netlify + Render (same pattern as translate-chat)
 
 | Where | Variable |
 |-------|----------|
+| Netlify | `VITE_API_BASE_URL` = `https://ai-movie-studio-api.onrender.com` |
 | Netlify | `VITE_BACKEND_API_KEY` = same as Render `BACKEND_API_KEY` |
-| Netlify | **Do not set** `VITE_API_BASE_URL` (delete it — direct cross-origin calls can get HTTP 403) |
-| Render | `BACKEND_API_KEY`, `GEMINI_API_KEY`, etc. |
-
-After deploy, `https://gearmstudio.netlify.app/health` should return JSON.
+| Render | `CORS_ORIGINS` = `https://gearmstudio.netlify.app` (or `FRONTEND_URL`) |
 
 ## Current UI
 

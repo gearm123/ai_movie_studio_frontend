@@ -31,18 +31,11 @@ export function BackendConnectionBanner({ connection }: BackendConnectionBannerP
     connection.status === "misconfigured" || connection.status === "error"
       ? connection.message
       : "";
-  const details =
-    connection.status === "error" || connection.status === "misconfigured"
-      ? connection.details
-      : undefined;
 
   return (
     <div className="backend-banner backend-banner--error" role="alert">
       <strong>Backend not reachable</strong>
-      <p className="backend-banner__summary">{message}</p>
-      {details ? (
-        <pre className="backend-banner__details">{details}</pre>
-      ) : null}
+      <p>{message}</p>
     </div>
   );
 }
