@@ -6,6 +6,7 @@ import {
   isBackendUrlConfigured,
   isProductionBuild,
 } from "../config/api";
+import { crossOriginFetchInit } from "./fetchDefaults";
 
 export class ApiError extends Error {
   status: number;
@@ -46,7 +47,7 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
 
   let response: Response;
   try {
-    response = await fetch(apiUrl(path), { ...init, headers });
+    response = await fetch(apiUrl(path), { ...crossOriginFetchInit, ...init, headers });
   } catch (cause) {
     const hint = isProductionBuild()
       ? `Cannot reach the API at ${getApiBaseUrl() || "(not set)"}. Add this page origin to CORS_ORIGINS on Render; confirm VITE_API_BASE_URL on Netlify.`

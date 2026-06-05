@@ -8,6 +8,7 @@ import {
   type BackendHealthResponse,
   type BackendJobResponse,
 } from "./aiHistoryBackend";
+import { crossOriginFetchInit } from "./fetchDefaults";
 import type { HealthResponse, JobCreateRequest, JobRecord } from "./types";
 
 export class HealthCheckError extends Error {
@@ -26,11 +27,16 @@ export async function checkHealth(): Promise<HealthResponse> {
   const healthUrl = `${base}/health`;
   let response: Response;
   try {
-    response = await fetch(healthUrl, { mode: "cors", cache: "no-store" });
+    response = await fetch(healthUrl, crossOriginFetchInit);
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
     throw new HealthCheckError(
-      `Could not reach ${healthUrl} (${detail}). Check Netlify VITE_API_BASE_URL matches your live Render URL, then redeploy the frontend.`,
+      `Could not reach ${healthUrl} (${detail}). Direct /health works but cross-site fetch failed — often Bitdefender or DNS filters blocking *.onrender.com from other sites.`,
+    );
+  }
+  if (response.status === 403) {
+    throw new HealthCheckError(
+      `HTTP 403 on ${healthUrl} from this page (direct /health in a tab may still work). Security software or your network is blocking cross-site requests to onrender.com — allowlist the API host or add a custom domain on Render for the API.`,
     );
   }
   if (!response.ok) {
@@ -82,7 +88,7 @@ export async function fetchJobVideoBlob(jobId: string): Promise<Blob> {
   if (key) {
     headers.set("X-API-Key", key);
   }
-  const response = await fetch(jobVideoUrl(jobId), { headers });
+  const response = await fetch(jobVideoUrl(jobId), { ...crossOriginFetchInit, headers });
   if (!response.ok) {
     throw new Error(`Video download failed (${response.status})`);
   }
