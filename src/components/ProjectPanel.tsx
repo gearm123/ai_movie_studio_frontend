@@ -1,8 +1,6 @@
 import type { MovieProjectDraft } from "../types/project";
 import { getMovieType, getNarrator, getVisualStyleOption } from "../constants/parameters";
-import { useBackendConnection } from "../hooks/useBackendConnection";
 import { useMovieJob } from "../hooks/useMovieJob";
-import { BackendConnectionBanner } from "./BackendConnectionBanner";
 import { isBackendUrlConfigured } from "../config/api";
 import { BeatEditor } from "./BeatEditor";
 import { BeatSelector } from "./BeatSelector";
@@ -37,7 +35,6 @@ export function ProjectPanel({
     startGeneration,
     reset,
   } = useMovieJob();
-  const backendConnection = useBackendConnection(true);
   const canGenerate = isBackendUrlConfigured();
 
   const showMainProcessing =
@@ -80,7 +77,6 @@ export function ProjectPanel({
       </div>
 
       <aside className="project-panel__aside">
-        <BackendConnectionBanner connection={backendConnection} />
         <PunctuationNotice />
         <div className="project-panel__summary">
           <p className="project-panel__summary-label">Movie summary</p>

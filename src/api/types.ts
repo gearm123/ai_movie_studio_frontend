@@ -47,11 +47,3 @@ export interface JobRecord {
   progress?: JobProgress | null;
   video_url?: string | null;
 }
-
-export interface HealthResponse {
-  status: string;
-  service?: string;
-  service_mode?: string;
-  worker_compute?: string;
-  auth_required?: boolean;
-}

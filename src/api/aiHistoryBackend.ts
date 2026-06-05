@@ -45,27 +45,7 @@ export type BackendJobResponse = {
   video_url?: string | null;
 };
 
-export type BackendHealthResponse = {
-  status: string;
-  service?: string;
-  service_mode?: string;
-  worker_compute?: string;
-  redis_queue?: boolean;
-  output_root?: string;
-  auth_required?: boolean;
-};
-
 export const API_V1_PREFIX = "/v1";
-
-export function isAiHistoryHealth(data: BackendHealthResponse): boolean {
-  if (data.status !== "ok") {
-    return false;
-  }
-  if (data.service === "ai-movie-studio") {
-    return true;
-  }
-  return typeof data.service_mode === "string";
-}
 
 export function normalizeJobStatus(status: BackendJobResponse["status"]): JobStatus {
   if (status === "completed") {
