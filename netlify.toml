@@ -1,4 +1,4 @@
-﻿# Same pattern as translate-chat-frontend (direct API URL, no proxy).
+# Same pattern as translate-chat-frontend (direct API URL, no proxy).
 [build]
   command = "npm run build"
   publish = "dist"
