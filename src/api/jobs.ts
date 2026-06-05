@@ -23,13 +23,14 @@ export async function checkHealth(): Promise<HealthResponse> {
   if (!base) {
     throw new HealthCheckError("VITE_API_BASE_URL is not set");
   }
+  const healthUrl = `${base}/health`;
   let response: Response;
   try {
-    response = await fetch(`${base}/health`);
+    response = await fetch(healthUrl, { mode: "cors", cache: "no-store" });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
     throw new HealthCheckError(
-      `Could not reach the API. Set Render CORS_ORIGINS to https://gearmstudio.netlify.app (exact origin, no trailing slash), then redeploy the API. (${detail})`,
+      `Could not reach ${healthUrl} (${detail}). Check Netlify VITE_API_BASE_URL matches your live Render URL, then redeploy the frontend.`,
     );
   }
   if (!response.ok) {

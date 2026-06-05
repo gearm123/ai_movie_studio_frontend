@@ -37,6 +37,11 @@ export function BackendConnectionBanner({ connection }: BackendConnectionBannerP
     <div className="backend-banner backend-banner--error" role="alert">
       <strong>Backend not reachable</strong>
       <p className="backend-banner__summary">{message}</p>
+      {getApiBaseUrl() ? (
+        <p className="backend-banner__hint">
+          Configured API: <code>{getApiBaseUrl()}</code>
+        </p>
+      ) : null}
       {details ? <p className="backend-banner__hint">{details}</p> : null}
     </div>
   );
