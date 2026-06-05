@@ -26,4 +26,4 @@ export function apiUrl(path: string): string {
 }
 
 export const NETLIFY_BACKEND_SETUP_HINT =
-  "Netlify → Environment variables: VITE_API_BASE_URL must match your Render URL (https://…onrender.com, no trailing slash). UI vars override netlify.toml. Set VITE_BACKEND_API_KEY = Render API_KEY. Render: CORS_ORIGINS = this page origin exactly. Redeploy both after changes.";
+  "Netlify: VITE_API_BASE_URL = Render backend URL · VITE_BACKEND_API_KEY = Render API_KEY · Render: CORS_ORIGINS = this page origin exactly · redeploy both.";

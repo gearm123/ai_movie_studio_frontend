@@ -38,9 +38,7 @@ export function ProjectPanel({
     reset,
   } = useMovieJob();
   const backendConnection = useBackendConnection(true);
-  const canGenerate =
-    isBackendUrlConfigured() &&
-    backendConnection.status === "connected";
+  const canGenerate = isBackendUrlConfigured();
 
   const showMainProcessing =
     phase === "submitting" || phase === "polling" || phase === "loading_video";

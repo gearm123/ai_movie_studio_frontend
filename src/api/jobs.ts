@@ -8,7 +8,6 @@ import {
   type BackendHealthResponse,
   type BackendJobResponse,
 } from "./aiHistoryBackend";
-import { crossOriginFetchInit } from "./fetchDefaults";
 import type { HealthResponse, JobCreateRequest, JobRecord } from "./types";
 
 export class HealthCheckError extends Error {
@@ -18,7 +17,7 @@ export class HealthCheckError extends Error {
   }
 }
 
-/** Public endpoint — no API key (same pattern as translate-chat fetchHealth). */
+/** Public endpoint — no API key (same as translate-chat `fetchHealth`). */
 export async function checkHealth(): Promise<HealthResponse> {
   const base = getApiBaseUrl();
   if (!base) {
@@ -27,20 +26,13 @@ export async function checkHealth(): Promise<HealthResponse> {
   const healthUrl = `${base}/health`;
   let response: Response;
   try {
-    response = await fetch(healthUrl, crossOriginFetchInit);
+    response = await fetch(healthUrl);
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    throw new HealthCheckError(
-      `Could not reach ${healthUrl} (${detail}). Direct /health works but cross-site fetch failed — often Bitdefender or DNS filters blocking *.onrender.com from other sites.`,
-    );
-  }
-  if (response.status === 403) {
-    throw new HealthCheckError(
-      `HTTP 403 on ${healthUrl} from this page (direct /health in a tab may still work). Security software or your network is blocking cross-site requests to onrender.com — allowlist the API host or add a custom domain on Render for the API.`,
-    );
+    throw new HealthCheckError(`Could not reach ${healthUrl} (${detail})`);
   }
   if (!response.ok) {
-    throw new HealthCheckError(`Health check failed: HTTP ${response.status}`);
+    throw new HealthCheckError(`Health check failed: HTTP ${response.status} for ${healthUrl}`);
   }
   const data = (await response.json()) as BackendHealthResponse;
   if (!isAiHistoryHealth(data)) {
@@ -88,7 +80,7 @@ export async function fetchJobVideoBlob(jobId: string): Promise<Blob> {
   if (key) {
     headers.set("X-API-Key", key);
   }
-  const response = await fetch(jobVideoUrl(jobId), { ...crossOriginFetchInit, headers });
+  const response = await fetch(jobVideoUrl(jobId), { headers });
   if (!response.ok) {
     throw new Error(`Video download failed (${response.status})`);
   }
