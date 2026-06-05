@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { checkHealth, HealthCheckError } from "../api/jobs";
-import { isBackendUrlConfigured } from "../config/api";
-import { formatReportText } from "../utils/backendConnectionReport";
+import { isBackendUrlConfigured, NETLIFY_BACKEND_SETUP_HINT } from "../config/api";
 
 export type BackendConnectionState =
   | { status: "checking" }
@@ -24,8 +23,7 @@ export function useBackendConnection(enabled: boolean) {
         if (!cancelled) {
           setConnection({
             status: "misconfigured",
-            message:
-              "VITE_API_BASE_URL is not set for this build. Netlify → Environment variables → set it to your Render URL → Deploy site.",
+            message: `VITE_API_BASE_URL is not set for this build. ${NETLIFY_BACKEND_SETUP_HINT}`,
           });
         }
         return;
@@ -37,25 +35,17 @@ export function useBackendConnection(enabled: boolean) {
         if (!cancelled) {
           setConnection({
             status: "connected",
-            service: health.service,
-            authRequired: health.auth_required,
+            service: health.service ?? "ai-history-backend",
+            authRequired: health.auth_required ?? false,
           });
         }
       } catch (err) {
         if (!cancelled) {
-          if (err instanceof HealthCheckError) {
-            setConnection({
-              status: "error",
-              message: err.report.summary,
-              details: formatReportText(err.report),
-            });
-            return;
-          }
-          const detail = err instanceof Error ? err.message : "Unknown error";
+          const message = err instanceof HealthCheckError ? err.message : err instanceof Error ? err.message : "Unknown error";
           setConnection({
             status: "error",
-            message: detail,
-            details: "Open DevTools → Console for more. Full report is logged when the health check runs.",
+            message,
+            details: NETLIFY_BACKEND_SETUP_HINT,
           });
         }
       }

@@ -4,9 +4,10 @@
   publish = "dist"
 
 [build.environment]
-  VITE_API_BASE_URL = "https://ai-history-api.onrender.com"
+  VITE_API_BASE_URL = "https://ai-history-backend.onrender.com"
 
-# Render backend: CORS_ORIGINS=https://gearmstudio.netlify.app
+# Render: rename service to ai-history-backend (avoid "-api" in hostname).
+# Render: CORS_ORIGINS=https://gearmstudio.netlify.app
 # Netlify: VITE_BACKEND_API_KEY = same value as Render API_KEY
 
 [[redirects]]

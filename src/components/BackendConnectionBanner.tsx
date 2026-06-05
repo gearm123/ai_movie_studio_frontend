@@ -37,14 +37,7 @@ export function BackendConnectionBanner({ connection }: BackendConnectionBannerP
     <div className="backend-banner backend-banner--error" role="alert">
       <strong>Backend not reachable</strong>
       <p className="backend-banner__summary">{message}</p>
-      {details ? (
-        <>
-          <p className="backend-banner__hint">
-            Full report is also in DevTools → <strong>Console</strong> (filter: AI Movie Studio).
-          </p>
-          <pre className="backend-banner__details">{details}</pre>
-        </>
-      ) : null}
+      {details ? <p className="backend-banner__hint">{details}</p> : null}
     </div>
   );
 }

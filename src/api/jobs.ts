@@ -2,35 +2,50 @@ import { apiFetch } from "./client";
 import { getApiBaseUrl, getApiKey } from "../config/api";
 import {
   API_V1_PREFIX,
+  isAiHistoryHealth,
   normalizeJobRecord,
   toBackendJobRequest,
+  type BackendHealthResponse,
   type BackendJobResponse,
 } from "./aiHistoryBackend";
-import {
-  logConnectionFailure,
-  probeHealthConnection,
-  type ConnectionFailureReport,
-} from "../utils/backendConnectionReport";
 import type { HealthResponse, JobCreateRequest, JobRecord } from "./types";
 
 export class HealthCheckError extends Error {
-  report: ConnectionFailureReport;
-
-  constructor(report: ConnectionFailureReport) {
-    super(report.summary);
+  constructor(message: string) {
+    super(message);
     this.name = "HealthCheckError";
-    this.report = report;
   }
 }
 
-/** Public endpoint — no API key. */
+/** Public endpoint — no API key (same pattern as translate-chat fetchHealth). */
 export async function checkHealth(): Promise<HealthResponse> {
-  const result = await probeHealthConnection();
-  if (result.ok === false) {
-    logConnectionFailure(result.report);
-    throw new HealthCheckError(result.report);
+  const base = getApiBaseUrl();
+  if (!base) {
+    throw new HealthCheckError("VITE_API_BASE_URL is not set");
   }
-  return result.data;
+  let response: Response;
+  try {
+    response = await fetch(`${base}/health`);
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new HealthCheckError(
+      `Could not reach the API. Set Render CORS_ORIGINS to https://gearmstudio.netlify.app (exact origin, no trailing slash), then redeploy the API. (${detail})`,
+    );
+  }
+  if (!response.ok) {
+    throw new HealthCheckError(`Health check failed: HTTP ${response.status}`);
+  }
+  const data = (await response.json()) as BackendHealthResponse;
+  if (!isAiHistoryHealth(data)) {
+    throw new HealthCheckError("Unexpected /health response from this API URL.");
+  }
+  return {
+    status: data.status,
+    service: data.service ?? "ai-history-backend",
+    service_mode: data.service_mode,
+    worker_compute: data.worker_compute,
+    auth_required: Boolean(getApiKey()),
+  };
 }
 
 export async function createJob(request: JobCreateRequest): Promise<JobRecord> {
