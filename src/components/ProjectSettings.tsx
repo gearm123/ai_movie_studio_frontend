@@ -26,7 +26,7 @@ export function ProjectSettingsPanel({ settings, beatCount, onChange }: ProjectS
         Project parameters
       </h2>
       <p className="project-settings__copy">
-        Matches backend CLI / job settings. Backend wiring comes in a later step.
+        These map to ai-history-api job fields (mode, duration, composition toggles, etc.).
       </p>
 
       <div className="project-settings__narration">

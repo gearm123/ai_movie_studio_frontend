@@ -26,4 +26,4 @@ export function apiUrl(path: string): string {
 }
 
 export const NETLIFY_BACKEND_SETUP_HINT =
-  "Netlify: VITE_API_BASE_URL = your Render URL (HTTPS, no trailing slash). Render: CORS_ORIGINS = https://gearmstudio.netlify.app (and FRONTEND_URL if you use one). Redeploy both after changes.";
+  "Netlify: VITE_API_BASE_URL=https://ai-history-api.onrender.com · VITE_BACKEND_API_KEY = Render API_KEY. Render: CORS_ORIGINS = your Netlify origin (e.g. https://gearmstudio.netlify.app). Redeploy both.";

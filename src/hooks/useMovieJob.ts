@@ -54,7 +54,12 @@ export function useMovieJob() {
     setElapsedSeconds(0);
   }, []);
 
-  const attachLogTail = useCallback(async (jobId: string) => {
+  const attachLogTail = useCallback(async (jobId: string, record?: JobRecord | null) => {
+    if (record?.progress?.detail || record?.progress?.stage) {
+      const parts = [record.progress.stage, record.progress.detail].filter(Boolean);
+      setLogTail(parts.join(" · "));
+      return;
+    }
     try {
       const log = await getJobLog(jobId);
       if (!log.trim()) {
@@ -63,7 +68,7 @@ export function useMovieJob() {
       const lines = log.trim().split("\n");
       setLogTail(lines.slice(-12).join("\n"));
     } catch {
-      /* log may not exist yet */
+      /* log endpoint may not exist on ai-history-api */
     }
   }, []);
 
@@ -97,15 +102,15 @@ export function useMovieJob() {
                   ? videoErr.message
                   : "Movie finished but the video could not be loaded.",
               );
-              void attachLogTail(jobId);
+              void attachLogTail(jobId, record);
             }
           } else {
             setPhase("error");
             setError(record.error ?? "Movie generation failed. See log below or Render dashboard.");
-            void attachLogTail(jobId);
+            void attachLogTail(jobId, record);
           }
         } else if (record.status === "running" || record.status === "queued") {
-          void attachLogTail(jobId);
+          void attachLogTail(jobId, record);
         }
       } catch (err) {
         clearPoll();
@@ -156,12 +161,12 @@ export function useMovieJob() {
                   ? videoErr.message
                   : "Movie finished but the video could not be loaded.",
               );
-              void attachLogTail(created.id);
+              void attachLogTail(created.id, latest);
             }
           } else {
             setPhase("error");
             setError(latest.error ?? "Movie generation failed. See log below or Render dashboard.");
-            void attachLogTail(created.id);
+            void attachLogTail(created.id, latest);
           }
           return;
         }

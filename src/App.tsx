@@ -20,6 +20,7 @@ function App() {
       {step === "setup" ? (
         <ProjectSetupPage
           settings={draft.settings}
+          beatCount={draft.beatCount}
           onChange={updateSettings}
           onBack={() => setStep("landing")}
           onContinue={() => setStep("beats")}

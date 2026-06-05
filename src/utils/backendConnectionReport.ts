@@ -1,4 +1,5 @@
 import { getApiBaseUrl, getApiKey } from "../config/api";
+import { isAiHistoryHealth, type BackendHealthResponse } from "../api/aiHistoryBackend";
 import type { HealthResponse } from "../api/types";
 
 export type HealthProbeResult =
@@ -56,7 +57,7 @@ function classifyFailure(
     }
     const apiHost = getApiBaseUrl();
     if (apiHost.includes("-api.") || apiHost.includes(".api.")) {
-      return "Failed to fetch — hostnames with “-api” are often blocked. Use ai-movie-studio-backend.onrender.com (like translate-chat-backend).";
+      return "Failed to fetch — hostnames with “-api” are sometimes blocked by browsers or extensions. Try Incognito or allowlist the host.";
     }
     return "Failed to fetch — often CORS (wrong origin on Render) OR blocked request (403). Check DevTools → Network → health.";
   }
@@ -157,32 +158,32 @@ export async function probeHealthConnection(): Promise<HealthProbeResult> {
       };
     }
 
-    const data = (await response.json()) as HealthResponse;
+    const data = (await response.json()) as BackendHealthResponse;
     lines.push(`  Body: ${JSON.stringify(data).slice(0, 120)}`);
-    if (data.service !== "ai-movie-studio" || data.status !== "ok") {
+    if (!isAiHistoryHealth(data)) {
       lines.push("");
-      lines.push("=== Wrong app on this Render URL ===");
+      lines.push("=== Unexpected /health response ===");
       lines.push(
-        "Expected: {\"status\":\"ok\",\"service\":\"ai-movie-studio\",...} (AI Movie Studio FastAPI).",
+        'Expected ai-history-api: {"status":"ok","service_mode":"monolith",...} or legacy {"service":"ai-movie-studio"}.',
       );
-      lines.push(
-        "This URL is running a different service. On Render → ai-movie-studio-backend → Settings:",
-      );
-      lines.push("  Repo: gearm123/ai_movie_studio  Branch: trunk");
-      lines.push("  Root directory: project/ai_history_realtime_project");
-      lines.push("  Build: pip install -r requirements-render.txt");
-      lines.push("  Start: python -m backend");
-      lines.push("Then Manual Deploy.");
+      lines.push("Check VITE_API_BASE_URL points at https://ai-history-api.onrender.com");
       return {
         ok: false,
         report: {
-          summary: "Render URL responds but it is not the AI Movie Studio API.",
+          summary: "Render URL responds but it is not the expected video API.",
           lines,
           consoleDetail: { origin, apiBase, healthUrl, body: data },
         },
       };
     }
-    return { ok: true, data, elapsedMs };
+    const normalized: HealthResponse = {
+      status: data.status,
+      service: data.service ?? "ai-history-api",
+      service_mode: data.service_mode,
+      worker_compute: data.worker_compute,
+      auth_required: data.auth_required ?? Boolean(getApiKey()),
+    };
+    return { ok: true, data: normalized, elapsedMs };
   } catch (err) {
     const elapsedMs = Math.round(performance.now() - t0);
     const fe = formatFetchError(err);
@@ -208,7 +209,7 @@ export async function probeHealthConnection(): Promise<HealthProbeResult> {
     lines.push("   → JSON = API up; problem is cross-origin from this page.");
     lines.push("2. DevTools → Network → health → Status (403? failed?) and Response headers.");
     lines.push(`3. Render CORS_ORIGINS must exactly match page origin: ${origin}`);
-    lines.push("4. API keys: only needed for /api/v1/* — not for /health.");
+    lines.push("4. API keys: only needed for /v1/* — not for /health.");
 
     const summary = classifyFailure(err, httpStatus, acao);
     return {

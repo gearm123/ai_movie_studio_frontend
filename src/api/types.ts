@@ -1,34 +1,34 @@
 export type JobStatus = "queued" | "running" | "succeeded" | "failed";
 
-export type PipelineMode =
-  | "full"
-  | "synthesize-composition"
-  | "synthesize-video"
-  | "synthesize-audio"
-  | "synthesize-animation"
-  | "regenerate-audio-only"
-  | "regenerate-video-only"
-  | "debug-compose";
-
-export interface BeatScriptPayload {
-  index: number;
-  narration: string;
+export interface JobProgress {
+  stage?: string | null;
+  detail?: string | null;
+  fraction?: number | null;
 }
 
+/** Fields sent to ai-history-api POST /v1/jobs (CreateJobRequest). */
 export interface JobCreateRequest {
   topic: string;
-  pipeline_mode?: PipelineMode;
   duration?: number;
   mode?: string;
   style_preset?: string;
-  skip_image_to_video?: boolean | null;
-  enable_image_to_video?: boolean | null;
-  brand_show?: boolean;
-  to_be_continued?: boolean;
-  israel_war_hero?: boolean;
-  interpolate?: boolean;
   voice?: string | null;
-  beats?: BeatScriptPayload[] | null;
+  music?: string | null;
+  skip_image_to_video?: boolean;
+  enable_image_to_video?: boolean;
+  realistic?: boolean;
+  cartoon?: boolean;
+  cartoon_network?: boolean;
+  cartoon_style?: string | null;
+  disney?: boolean;
+  debug?: boolean;
+  brand_show?: boolean;
+  event_blueprint?: string | null;
+  visualpath_blueprint?: string | null;
+  prefer_text_to_video?: boolean;
+  israel_war_hero?: boolean;
+  to_be_continued?: boolean;
+  interpolate?: boolean;
 }
 
 export interface JobRecord {
@@ -44,14 +44,14 @@ export interface JobRecord {
   log_path?: string | null;
   output_video_path?: string | null;
   project_dir?: string | null;
-}
-
-export interface JobCreateResponse {
-  job: JobRecord;
+  progress?: JobProgress | null;
+  video_url?: string | null;
 }
 
 export interface HealthResponse {
   status: string;
-  service: string;
-  auth_required: boolean;
+  service?: string;
+  service_mode?: string;
+  worker_compute?: string;
+  auth_required?: boolean;
 }

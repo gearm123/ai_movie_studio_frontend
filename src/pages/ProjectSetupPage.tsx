@@ -1,18 +1,12 @@
 import type { MovieType, ProjectSettings } from "../types/project";
-import {
-  MOVIE_TYPES,
-  NARRATORS,
-  STYLE_PRESETS,
-  getMovieType,
-  getNarrator,
-  getVisualStyleOption,
-} from "../constants/parameters";
-import { MovieStyleToggle } from "../components/MovieStyleToggle";
-import { SelectField, TextField } from "../components/ParameterField";
+import { MOVIE_TYPES, getMovieType } from "../constants/parameters";
+import { ProjectSettingsPanel } from "../components/ProjectSettings";
+import { SelectField } from "../components/ParameterField";
 import "./ProjectSetupPage.css";
 
 interface ProjectSetupPageProps {
   settings: ProjectSettings;
+  beatCount: number;
   onChange: (patch: Partial<ProjectSettings>) => void;
   onBack: () => void;
   onContinue: () => void;
@@ -20,13 +14,12 @@ interface ProjectSetupPageProps {
 
 export function ProjectSetupPage({
   settings,
+  beatCount,
   onChange,
   onBack,
   onContinue,
 }: ProjectSetupPageProps) {
-  const narrator = getNarrator(settings.narrator);
   const movieType = getMovieType(settings.movie_type);
-  const visualStyle = getVisualStyleOption(settings.visual_style);
 
   return (
     <section className="project-setup" aria-labelledby="project-setup-title">
@@ -51,45 +44,9 @@ export function ProjectSetupPage({
           }))}
           onChange={(value) => onChange({ movie_type: value as MovieType })}
         />
-
-        <SelectField
-          label="Narrator"
-          hint={narrator.description}
-          value={settings.narrator}
-          options={NARRATORS.map((item) => ({
-            value: item.key,
-            label: item.label,
-          }))}
-          onChange={(value) => onChange({ narrator: value })}
-        />
-
-        <div className="project-setup__field">
-          <span className="project-setup__field-label">Movie style</span>
-          <p className="project-setup__field-hint">{visualStyle.description}</p>
-          <MovieStyleToggle
-            value={settings.visual_style}
-            onChange={(visual_style) => onChange({ visual_style })}
-          />
-        </div>
-
-        <TextField
-          label="Topic / figure"
-          hint="Required — figure slug the backend knows, e.g. my_mysteriosgrandfather"
-          value={settings.topic}
-          placeholder="my_mysteriosgrandfather"
-          onChange={(value) => onChange({ topic: value })}
-        />
-
-        <SelectField
-          label="Style preset"
-          value={settings.style_preset}
-          options={STYLE_PRESETS.map((preset) => ({
-            value: preset.key,
-            label: preset.title,
-          }))}
-          onChange={(value) => onChange({ style_preset: value })}
-        />
       </div>
+
+      <ProjectSettingsPanel settings={settings} beatCount={beatCount} onChange={onChange} />
 
       <div className="project-setup__actions">
         <button type="button" className="project-setup__back" onClick={onBack}>
