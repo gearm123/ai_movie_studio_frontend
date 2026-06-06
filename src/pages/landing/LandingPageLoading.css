@@ -1,0 +1,32 @@
+.landing-page-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  background: var(--bg);
+}
+
+.landing-page-loading__pulse {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 2px solid rgba(232, 184, 106, 0.18);
+  border-top-color: var(--accent);
+  animation: landing-page-loading-spin 0.85s linear infinite;
+}
+
+.landing-page-loading__label {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@keyframes landing-page-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
