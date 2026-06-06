@@ -1,3 +1,9 @@
+.beats-browser__structure .beat-selector {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: none;
+}
+
 .beats-browser {
   display: grid;
   grid-template-columns: minmax(16rem, 0.95fr) minmax(0, 1.6fr) minmax(14rem, 0.85fr);
@@ -64,7 +70,11 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.beats-browser__summary-label:not(:first-child) {
+  margin-top: 0.85rem;
 }
 
 .beats-browser__summary-list {

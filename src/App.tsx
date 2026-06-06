@@ -11,7 +11,7 @@ import "./App.css";
 function App() {
   const [step, setStep] = useState<AppStep>("landing");
   const [setupError, setSetupError] = useState<string | null>(null);
-  const { draft, setBeatCount, updateSettings, updateBeatVisual } = useProjectDraft();
+  const { draft, setBeatCount, updateSettings, updateBeatText, updateBeatVisual } = useProjectDraft();
 
   const handleSetupContinue = () => {
     const error = validateSetupSettings(draft.settings);
@@ -46,6 +46,7 @@ function App() {
         <ProjectPanel
           draft={draft}
           onBeatCountChange={setBeatCount}
+          onBeatTextChange={updateBeatText}
           onBeatVisualChange={updateBeatVisual}
           onBack={() => setStep("setup")}
         />

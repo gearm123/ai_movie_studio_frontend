@@ -65,29 +65,25 @@
   color: var(--text-muted);
 }
 
-.beat-editor__info-card {
-  padding: 1rem 1.1rem;
-  border-radius: 0.85rem;
-  border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.02);
+.beat-editor__custom {
   display: grid;
-  gap: 0.55rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-soft);
 }
 
-.beat-editor__info-card strong {
+.beat-editor__custom-label {
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--text);
 }
 
-.beat-editor__info-card code {
-  color: var(--accent);
-}
-
-.beat-editor__item--custom {
-  display: grid;
-  gap: 0.75rem;
+.beat-editor__bundled-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
 }
 
 .beat-editor__custom-head {

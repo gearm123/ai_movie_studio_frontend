@@ -28,13 +28,15 @@ function voiceLabel(key: string): string {
 export function ProjectPanelPhone({
   draft,
   onBeatCountChange,
+  onBeatTextChange,
   onBeatVisualChange,
   onBack,
 }: ProjectPanelProps) {
   const isCustom = draft.settings.visual_style === "custom";
-  const customVisualsReady = isCustom
-    ? isBundledCustomTopic(draft.settings.topic) ||
-      draft.beats.every((beat) => Boolean(beat.custom_visual_url))
+  const showCustomVisuals = isCustom && !isBundledCustomTopic(draft.settings.topic);
+  const beatsWithText = draft.beats.filter((beat) => beat.narration.trim()).length;
+  const customVisualsReady = showCustomVisuals
+    ? draft.beats.every((beat) => Boolean(beat.custom_visual_url))
     : true;
 
   const {
@@ -57,9 +59,7 @@ export function ProjectPanelPhone({
     <div className="beats-phone">
       <div className="beats-phone__top">
         <div>
-          <h2 className="beats-phone__title">
-            {isCustom ? "Upload images per beat" : "Generate video"}
-          </h2>
+          <h2 className="beats-phone__title">Your movie script</h2>
           {isProcessing ? (
             <p className="beats-phone__processing-note">Video generation in progress</p>
           ) : null}
@@ -69,11 +69,9 @@ export function ProjectPanelPhone({
         </button>
       </div>
 
-      {isCustom ? (
-        <div className="beats-phone__structure">
-          <BeatSelector beatCount={draft.beatCount} onChange={onBeatCountChange} />
-        </div>
-      ) : null}
+      <div className="beats-phone__structure">
+        <BeatSelector beatCount={draft.beatCount} onChange={onBeatCountChange} />
+      </div>
 
       <div
         className={
@@ -93,14 +91,16 @@ export function ProjectPanelPhone({
         <BeatEditor
           beats={draft.beats}
           visualStyle={draft.settings.visual_style}
+          showCustomVisuals={showCustomVisuals}
+          onBeatTextChange={onBeatTextChange}
           onBeatVisualChange={onBeatVisualChange}
         />
       </div>
 
       <aside className="beats-phone__aside">
-        {isCustom ? <PunctuationNotice /> : null}
+        <PunctuationNotice />
         <div className="beats-phone__summary">
-          <p className="beats-phone__summary-label">Movie summary</p>
+          <p className="beats-phone__summary-label">From setup</p>
           <dl className="beats-phone__summary-list">
             <div>
               <dt>{draft.settings.figure_source === "template" ? "Template" : "Figure"}</dt>
@@ -126,18 +126,27 @@ export function ProjectPanelPhone({
               <dt>Visuals</dt>
               <dd>{getVisualStyleOption(draft.settings.visual_style).label}</dd>
             </div>
-            {isCustom ? (
+          </dl>
+
+          <p className="beats-phone__summary-label">Beat progress</p>
+          <dl className="beats-phone__summary-list">
+            <div>
+              <dt>Beats with text</dt>
+              <dd>
+                {beatsWithText} / {draft.beatCount}
+              </dd>
+            </div>
+            {showCustomVisuals ? (
               <div>
-                <dt>Beat visuals</dt>
+                <dt>Beat images</dt>
                 <dd>
-                  {isBundledCustomTopic(draft.settings.topic)
-                    ? "Server assets"
-                    : `${draft.beats.filter((beat) => beat.custom_visual_url).length} / ${draft.beatCount}`}
+                  {draft.beats.filter((beat) => beat.custom_visual_url).length} / {draft.beatCount}
                 </dd>
               </div>
             ) : null}
           </dl>
-          {!customVisualsReady && isCustom ? (
+
+          {!customVisualsReady && showCustomVisuals ? (
             <p className="beats-phone__summary-note">
               Upload one image for every beat before generating.
             </p>

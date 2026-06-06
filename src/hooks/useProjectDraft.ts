@@ -102,11 +102,16 @@ export function useProjectDraft(initial?: MovieProjectDraft) {
     [],
   );
 
+  const updateBeatText = useCallback((beatIndex: number, text: string) => {
+    updateBeat(beatIndex, { narration: text });
+  }, [updateBeat]);
+
   return {
     draft,
     setBeatCount,
     updateSettings,
     updateBeat,
+    updateBeatText,
     updateBeatVisual,
     updateBeatAudioParam,
     updateBeatCompositionParam,
