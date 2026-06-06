@@ -7,8 +7,7 @@ interface StudioLayoutBrowserProps {
   children: ReactNode;
 }
 
-const STEP_FOOTER: Record<Exclude<AppStep, "landing">, string> = {
-  setup: "Whole-movie settings",
+const STEP_FOOTER: Partial<Record<Exclude<AppStep, "landing">, string>> = {
   beats: "Beat-by-beat editing",
 };
 
@@ -30,7 +29,9 @@ export function StudioLayoutBrowser({ step, children }: StudioLayoutBrowserProps
       </header>
       <main className="studio-browser__main">{children}</main>
       <footer className="studio-browser__footer">
-        <span>{STEP_FOOTER[step as Exclude<AppStep, "landing">]}</span>
+        {STEP_FOOTER[step as Exclude<AppStep, "landing">] ? (
+          <span>{STEP_FOOTER[step as Exclude<AppStep, "landing">]}</span>
+        ) : null}
       </footer>
     </div>
   );

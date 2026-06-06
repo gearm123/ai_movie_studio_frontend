@@ -1,7 +1,8 @@
 import {
   FIGURE_STYLE_PRESETS,
-  VOICE_OPTIONS,
+  getFigureDisplayLabel,
   getMovieType,
+  getVoiceLabel,
   getVisualStyleOption,
   isBundledCustomTopic,
 } from "../../constants/parameters";
@@ -20,7 +21,8 @@ function stylePresetLabel(key: string): string {
 }
 
 function voiceLabel(key: string): string {
-  return VOICE_OPTIONS.find((voice) => voice.key === key)?.label ?? key;
+  if (!key || key === "auto") return getVoiceLabel("gary");
+  return getVoiceLabel(key);
 }
 
 export function ProjectPanelPhone({
@@ -55,7 +57,9 @@ export function ProjectPanelPhone({
     <div className="beats-phone">
       <div className="beats-phone__top">
         <div>
-          <h2 className="beats-phone__title">{isCustom ? "Custom template" : "Generate video"}</h2>
+          <h2 className="beats-phone__title">
+            {isCustom ? "Upload images per beat" : "Generate video"}
+          </h2>
           {isProcessing ? (
             <p className="beats-phone__processing-note">Video generation in progress</p>
           ) : null}
@@ -99,8 +103,8 @@ export function ProjectPanelPhone({
           <p className="beats-phone__summary-label">Movie summary</p>
           <dl className="beats-phone__summary-list">
             <div>
-              <dt>Topic</dt>
-              <dd>{draft.settings.topic.trim() || "—"}</dd>
+              <dt>{draft.settings.figure_source === "template" ? "Template" : "Figure"}</dt>
+              <dd>{getFigureDisplayLabel(draft.settings)}</dd>
             </div>
             <div>
               <dt>Movie type</dt>
@@ -135,7 +139,7 @@ export function ProjectPanelPhone({
           </dl>
           {!customVisualsReady && isCustom ? (
             <p className="beats-phone__summary-note">
-              Add an image for every beat, or use a bundled topic like my_mysteriosgrandfather.
+              Upload one image for every beat before generating.
             </p>
           ) : null}
           <MovieJobPanel

@@ -2,20 +2,20 @@ import type {
   BeatAudioParams,
   BeatCompositionParams,
   BeatDraft,
+  FigureSource,
   ProjectSettings,
   VisualPathBlueprint,
   VisualStyle,
 } from "../types/project";
 
-export const NARRATION_VOICES = ["auto", "gary", "james", "jon", "laura"] as const;
+export const NARRATION_VOICES = ["gary"] as const;
 
-export const VOICE_OPTIONS = [
-  { key: "auto", label: "Auto (figure default)" },
-  { key: "gary", label: "Gary" },
-  { key: "james", label: "James" },
-  { key: "jon", label: "Jon" },
-  { key: "laura", label: "Laura" },
-] as const;
+/** UI-facing narration voices. Backend id stays in `key`; add entries as voices ship. */
+export const VOICE_OPTIONS = [{ key: "gary", label: "Gary" }] as const;
+
+export function getVoiceLabel(key: string): string {
+  return VOICE_OPTIONS.find((voice) => voice.key === key)?.label ?? key;
+}
 
 /** Figure-video style presets (matches local CLI `--style-preset` for biographical shorts). */
 export const FIGURE_STYLE_PRESETS = [
@@ -23,6 +23,53 @@ export const FIGURE_STYLE_PRESETS = [
   { key: "instagram_epictok", title: "Instagram Epictok" },
   { key: "pixels", title: "Kane Pixels" },
 ] as const;
+
+/**
+ * Registered figure story blueprints on the backend (`FIGURE_STORY_BLUEPRINTS` in
+ * ai_history_realtime/blueprints.py). Templates only — not for generating duplicate videos.
+ */
+export const FIGURE_BLUEPRINT_TEMPLATES = [
+  { key: "ragnar", label: "Ragnar Lothbrok" },
+  { key: "kahalani", label: "Avigdor Kahalani" },
+  { key: "amnon_lipkin", label: "Amnon Lipkin-Shahak" },
+  { key: "yoni_netanyahu", label: "Yoni Netanyahu" },
+  { key: "aner_shapira", label: "Aner Shapira" },
+  { key: "aner_shapira_part_one", label: "Aner Shapira (Part One)" },
+  { key: "meir_har_zion", label: "Meir Har-Zion" },
+  { key: "my_mysteriosgrandfather", label: "My Mysteriosgrandfather" },
+] as const;
+
+/** @deprecated Use FIGURE_BLUEPRINT_TEMPLATES */
+export const FIGURE_BLUEPRINTS = FIGURE_BLUEPRINT_TEMPLATES;
+
+export function getFigureBlueprintTemplate(key: string) {
+  return FIGURE_BLUEPRINT_TEMPLATES.find((figure) => figure.key === key) ?? null;
+}
+
+export function getFigureBlueprint(key: string) {
+  return getFigureBlueprintTemplate(key);
+}
+
+export function isFigureBlueprintTemplateKey(key: string): boolean {
+  return FIGURE_BLUEPRINT_TEMPLATES.some((figure) => figure.key === key);
+}
+
+export const FIGURE_TEMPLATE_SELECT_OPTIONS: { value: string; label: string }[] = [
+  { value: "", label: "Select a template…" },
+  ...FIGURE_BLUEPRINT_TEMPLATES.map((figure) => ({
+    value: figure.key,
+    label: figure.label,
+  })),
+];
+
+export function getFigureDisplayLabel(settings: ProjectSettings): string {
+  const topic = settings.topic.trim();
+  if (!topic) return "—";
+  if (settings.figure_source === "template") {
+    return getFigureBlueprintTemplate(topic)?.label ?? topic;
+  }
+  return topic;
+}
 
 /** Bundled custom templates with server-side stills (no AI visuals). */
 export const SERVER_BUNDLED_CUSTOM_TOPICS = [
@@ -42,7 +89,7 @@ export const MOVIE_TYPES = [
     key: "figure_blueprint" as const,
     label: "Figure video",
     description:
-      "Biographical short about a historical figure. The backend plans beats from your topic, like the local CLI.",
+      "Create a new figure blueprint from a name, or start from an existing template with narration and punctuation contracts.",
   },
 ] as const;
 
@@ -150,23 +197,22 @@ export const AUDIO_PARAM_SUGGESTIONS: Record<keyof Omit<BeatAudioParams, "speake
 export const VISUAL_STYLE_OPTIONS = [
   {
     key: "still" as const,
-    label: "Still image",
-    description: "Text-to-image still per beat with narration (local: --visualpath-blueprint text_to_image).",
+    label: "Text to image",
+    description: "Text-to-image visuals.",
     backendVisualPath: "text_to_image" as VisualPathBlueprint,
     backendVisualDelivery: "still",
   },
   {
     key: "animation" as const,
-    label: "Animation",
-    description: "Native text-to-video clip per beat (local: --visualpath-blueprint text_to_video).",
+    label: "Text to video",
+    description: "Text-to-video visuals.",
     backendVisualPath: "text_to_video" as VisualPathBlueprint,
     backendVisualDelivery: "animation",
   },
   {
     key: "custom" as const,
-    label: "Custom template",
-    description:
-      "Your own still per beat — no AI visuals. Example: my_mysteriosgrandfather with images under assets/zadey_visuals/<topic>/.",
+    label: "Custom images",
+    description: "Upload your own images per beat.",
     backendVisualPath: "static_images" as VisualPathBlueprint,
     backendVisualDelivery: "still",
   },
@@ -205,10 +251,11 @@ export const PUNCTUATION_MARKUP = [
 export const DEFAULT_PROJECT_SETTINGS: ProjectSettings = {
   movie_type: "figure_blueprint",
   topic: "",
+  figure_source: "new" satisfies FigureSource,
   style_preset: "tiktok_ai_history",
   mode: "tiktok",
   duration: 14,
-  voice: "auto",
+  voice: "gary",
   delivery_profile: "cinematic_suspense",
   brand_show: false,
   to_be_continued: false,

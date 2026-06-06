@@ -6,7 +6,7 @@
     calc(1.1rem + env(safe-area-inset-top, 0px))
     1rem
     calc(1.25rem + env(safe-area-inset-bottom, 0px));
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .studio-phone__glow {
@@ -67,6 +67,7 @@
 .studio-phone__main {
   position: relative;
   z-index: 1;
+  padding-bottom: 0.5rem;
 }
 
 .studio-phone__footer {

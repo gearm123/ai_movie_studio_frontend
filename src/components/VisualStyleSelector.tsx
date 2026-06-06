@@ -6,6 +6,8 @@ interface VisualStyleSelectorProps {
   value: VisualStyle;
   onChange: (style: VisualStyle) => void;
   compact?: boolean;
+  /** setup = centered cards for whole-video configuration on page 2 */
+  layout?: "default" | "setup";
 }
 
 const STYLE_ICONS: Record<VisualStyle, string> = {
@@ -14,13 +16,21 @@ const STYLE_ICONS: Record<VisualStyle, string> = {
   custom: "📁",
 };
 
-export function VisualStyleSelector({ value, onChange, compact = false }: VisualStyleSelectorProps) {
+export function VisualStyleSelector({
+  value,
+  onChange,
+  compact = false,
+  layout = "default",
+}: VisualStyleSelectorProps) {
+  const layoutClass =
+    layout === "setup"
+      ? "visual-style-selector visual-style-selector--setup"
+      : compact
+        ? "visual-style-selector visual-style-selector--compact"
+        : "visual-style-selector";
+
   return (
-    <div
-      className={compact ? "visual-style-selector visual-style-selector--compact" : "visual-style-selector"}
-      role="radiogroup"
-      aria-label="Visual style"
-    >
+    <div className={layoutClass} role="radiogroup" aria-label="Visual mode">
       {VISUAL_STYLE_OPTIONS.map((option) => {
         const selected = value === option.key;
         return (
@@ -41,7 +51,7 @@ export function VisualStyleSelector({ value, onChange, compact = false }: Visual
             </span>
             <span className="visual-style-selector__text">
               <strong>{option.label}</strong>
-              {!compact ? <span>{option.description}</span> : null}
+              {!compact && layout !== "setup" ? <span>{option.description}</span> : null}
             </span>
           </button>
         );
@@ -49,4 +59,3 @@ export function VisualStyleSelector({ value, onChange, compact = false }: Visual
     </div>
   );
 }
-

@@ -10,14 +10,14 @@ interface ParameterFieldProps {
 
 export function ParameterField({ label, hint, styleNote, children }: ParameterFieldProps) {
   return (
-    <label className="parameter-field">
+    <div className="parameter-field">
       <span className="parameter-field__label-row">
         <span className="parameter-field__label">{label}</span>
         {styleNote ? <span className="parameter-field__badge">{styleNote}</span> : null}
       </span>
       {hint ? <span className="parameter-field__hint">{hint}</span> : null}
       {children}
-    </label>
+    </div>
   );
 }
 

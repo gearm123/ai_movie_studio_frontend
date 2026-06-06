@@ -35,9 +35,14 @@
   width: 100%;
   border-radius: 0.65rem;
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-strong);
   color: var(--text);
   padding: 0.65rem 0.75rem;
+}
+
+.parameter-field__control option {
+  background-color: var(--surface-strong);
+  color: var(--text);
 }
 
 .parameter-field__control:focus {
@@ -53,4 +58,20 @@
   resize: vertical;
   min-height: 6rem;
   line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .parameter-field__label {
+    font-size: 0.86rem;
+  }
+
+  .parameter-field__hint {
+    font-size: 0.76rem;
+  }
+
+  .parameter-field__control {
+    min-height: 2.75rem;
+    padding: 0.7rem 0.8rem;
+    font-size: 1rem;
+  }
 }

@@ -12,40 +12,59 @@
 
 .setup-phone__title {
   font-family: "Instrument Serif", Georgia, serif;
-  font-size: 1.6rem;
+  font-size: clamp(1.45rem, 5.5vw, 1.75rem);
   font-weight: 400;
   margin-bottom: 0.45rem;
+  line-height: 1.15;
 }
 
 .setup-phone__copy {
   color: var(--text-muted);
-  margin-bottom: 1.15rem;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
-.setup-phone__card {
-  display: grid;
-  gap: 1rem;
+.setup-phone .project-settings {
   padding: 1rem;
-  border-radius: 1rem;
-  border: 1px solid var(--border-soft);
-  background: var(--surface);
+  border-radius: 0.9rem;
+}
+
+.setup-phone__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: linear-gradient(180deg, transparent, var(--bg) 28%);
+}
+
+.setup-phone__error {
+  margin: 0 0 0.65rem;
+  color: var(--danger);
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .setup-phone__actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.65rem;
-  margin-top: 1.15rem;
 }
 
 .setup-phone__back,
 .setup-phone__continue {
+  min-height: 3rem;
   border-radius: 0.85rem;
-  padding: 0.9rem 0.75rem;
+  padding: 0.85rem 0.75rem;
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+}
+
+.setup-phone__continue:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .setup-phone__back {

@@ -6,6 +6,9 @@ export type VisualPathBlueprint = "text_to_image" | "text_to_video" | "static_im
 /** Whole-movie blueprint category — extend as backend adds pipelines. */
 export type MovieType = "figure_blueprint";
 
+/** New figure name vs an existing server-side figure blueprint template. */
+export type FigureSource = "new" | "template";
+
 /** Mirrors backend planner `audio_params` keys (planner.py). */
 export interface BeatAudioParams {
   speaker: string;
@@ -47,7 +50,9 @@ export interface BeatDraft {
 export interface ProjectSettings {
   /** Blueprint category for the whole movie (maps to backend pipeline family). */
   movie_type: MovieType;
+  /** New figure name or existing template key — sent to backend as `topic`. */
   topic: string;
+  figure_source: FigureSource;
   style_preset: string;
   mode: "tiktok" | "youtube_shorts";
   duration: number;

@@ -1,10 +1,9 @@
-import type { MovieType, ProjectSettings } from "../../types/project";
+import type { ProjectSettings } from "../../types/project";
 
 export interface ProjectSetupPageProps {
   settings: ProjectSettings;
   onChange: (patch: Partial<ProjectSettings>) => void;
   onBack: () => void;
   onContinue: () => void;
+  setupError?: string | null;
 }
-
-export type { MovieType };

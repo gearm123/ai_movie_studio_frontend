@@ -34,6 +34,13 @@
   max-width: 42rem;
 }
 
+.beat-editor__progress {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
 .beat-editor__list {
   margin: 0;
   padding: 0;
@@ -149,6 +156,28 @@
   color: var(--text-muted);
   font-size: 0.82rem;
   cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .beat-editor {
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: none;
+  }
+
+  .beat-editor__copy {
+    font-size: 0.88rem;
+  }
+
+  .beat-editor__custom-body {
+    grid-template-columns: 1fr;
+  }
+
+  .beat-editor__upload,
+  .beat-editor__clear {
+    min-height: 2.75rem;
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {

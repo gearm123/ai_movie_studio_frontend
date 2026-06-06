@@ -9,6 +9,11 @@ interface BeatEditorProps {
 
 export function BeatEditor({ beats, visualStyle, onBeatVisualChange }: BeatEditorProps) {
   if (visualStyle !== "custom") {
+    const visualLabel =
+      visualStyle === "still"
+        ? "Text to image — AI still per beat."
+        : "Text to video — AI animated clip per beat.";
+
     return (
       <section className="beat-editor" aria-labelledby="beat-editor-title">
         <div className="beat-editor__header">
@@ -17,38 +22,39 @@ export function BeatEditor({ beats, visualStyle, onBeatVisualChange }: BeatEdito
             Ready to generate
           </h2>
           <p className="beat-editor__copy">
-            For still and animation modes the backend plans beats from your figure topic — same as
-            running the local CLI. Review your settings in the sidebar, then generate.
+            You chose {visualStyle === "still" ? "text to image" : "text to video"} on the setup
+            page. The backend runs the pipeline from those settings and generates visuals — no
+            beat-by-beat editing needed here.
           </p>
         </div>
         <div className="beat-editor__info-card" role="status">
           <p>
-            <strong>Topic:</strong> drives the story blueprint and narration contracts.
+            <strong>Visual mode:</strong> {visualLabel}
           </p>
           <p>
-            <strong>Duration:</strong> total runtime passed as <code>--duration</code>.
-          </p>
-          <p>
-            <strong>Visuals:</strong>{" "}
-            {visualStyle === "still"
-              ? "text-to-image still per beat."
-              : "native text-to-video clip per beat."}
+            <strong>Figure blueprint</strong> from setup (template or new name) drives narration and
+            punctuation contracts on the backend.
           </p>
         </div>
       </section>
     );
   }
 
+  const uploadedCount = beats.filter((beat) => beat.custom_visual_url).length;
+
   return (
     <section className="beat-editor" aria-labelledby="beat-editor-title">
       <div className="beat-editor__header">
         <p className="beat-editor__step">Step 3 of 3</p>
         <h2 id="beat-editor-title" className="beat-editor__title">
-          Add visuals for each beat
+          Upload one image per beat
         </h2>
         <p className="beat-editor__copy">
-          Custom templates skip AI image generation. Upload one still per beat, or use a bundled
-          figure like <code>my_mysteriosgrandfather</code> with images already on the server.
+          You chose custom images on the setup page. Upload a still for every beat below — the
+          video uses your files instead of AI text-to-image or text-to-video.
+        </p>
+        <p className="beat-editor__progress" aria-live="polite">
+          {uploadedCount} of {beats.length} beats have an image
         </p>
       </div>
 
@@ -60,7 +66,9 @@ export function BeatEditor({ beats, visualStyle, onBeatVisualChange }: BeatEdito
               {beat.custom_visual_name ? (
                 <span className="beat-editor__file-name">{beat.custom_visual_name}</span>
               ) : (
-                <span className="beat-editor__file-name beat-editor__file-name--empty">No image yet</span>
+                <span className="beat-editor__file-name beat-editor__file-name--empty">
+                  Required — choose an image
+                </span>
               )}
             </div>
             <div className="beat-editor__custom-body">
@@ -76,7 +84,7 @@ export function BeatEditor({ beats, visualStyle, onBeatVisualChange }: BeatEdito
                 </div>
               )}
               <label className="beat-editor__upload">
-                <span>{beat.custom_visual_url ? "Replace image" : "Choose image"}</span>
+                <span>{beat.custom_visual_url ? "Replace image" : "Upload image"}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -103,4 +111,3 @@ export function BeatEditor({ beats, visualStyle, onBeatVisualChange }: BeatEdito
     </section>
   );
 }
-

@@ -52,6 +52,56 @@
   line-height: 1.35;
 }
 
+.visual-style-selector--setup {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.visual-style-selector--setup .visual-style-selector__option {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  min-height: 100%;
+  padding: 1rem 0.85rem;
+}
+
+.visual-style-selector--setup .visual-style-selector__icon {
+  margin: 0 0 0.35rem;
+}
+
+.visual-style-selector--setup .visual-style-selector__text {
+  width: 100%;
+  justify-items: center;
+}
+
+.visual-style-selector--setup .visual-style-selector__text span {
+  text-align: center;
+}
+
 .visual-style-selector--compact .visual-style-selector__text span {
   display: none;
+}
+
+@media (min-width: 761px) and (max-width: 900px) {
+  .visual-style-selector--setup {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .visual-style-selector--setup {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .visual-style-selector--setup .visual-style-selector__option {
+    padding: 0.8rem 0.4rem;
+    min-height: 5.5rem;
+  }
+
+  .visual-style-selector--setup .visual-style-selector__text strong {
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
 }
