@@ -6,7 +6,6 @@ import "./ProjectSetupPage.css";
 
 interface ProjectSetupPageProps {
   settings: ProjectSettings;
-  beatCount: number;
   onChange: (patch: Partial<ProjectSettings>) => void;
   onBack: () => void;
   onContinue: () => void;
@@ -14,7 +13,6 @@ interface ProjectSetupPageProps {
 
 export function ProjectSetupPage({
   settings,
-  beatCount,
   onChange,
   onBack,
   onContinue,
@@ -46,7 +44,7 @@ export function ProjectSetupPage({
         />
       </div>
 
-      <ProjectSettingsPanel settings={settings} beatCount={beatCount} onChange={onChange} />
+      <ProjectSettingsPanel settings={settings} onChange={onChange} />
 
       <div className="project-setup__actions">
         <button type="button" className="project-setup__back" onClick={onBack}>

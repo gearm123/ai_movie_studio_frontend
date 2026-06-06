@@ -10,6 +10,11 @@ export function LandingPage({ onStart }: LandingPageProps) {
       <div className="landing-page__glow landing-page__glow--left" aria-hidden="true" />
       <div className="landing-page__glow landing-page__glow--right" aria-hidden="true" />
       <main className="landing-page__main">
+        <img
+          className="landing-page__logo"
+          src="/brand_logo.png"
+          alt="AI Movie Studio"
+        />
         <p className="landing-page__eyebrow">AI Movie Studio</p>
         <h1 className="landing-page__title">Generate video</h1>
         <button type="button" className="landing-page__cta" onClick={onStart}>

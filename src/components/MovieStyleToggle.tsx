@@ -12,26 +12,38 @@ export function MovieStyleToggle({ value, onChange }: MovieStyleToggleProps) {
       <button
         type="button"
         className={
-          value === "image"
+          value === "still"
             ? "movie-style-toggle__btn movie-style-toggle__btn--active"
             : "movie-style-toggle__btn"
         }
-        aria-pressed={value === "image"}
-        onClick={() => onChange("image")}
+        aria-pressed={value === "still"}
+        onClick={() => onChange("still")}
       >
         Still image
       </button>
       <button
         type="button"
         className={
-          value === "video"
+          value === "animation"
             ? "movie-style-toggle__btn movie-style-toggle__btn--active"
             : "movie-style-toggle__btn"
         }
-        aria-pressed={value === "video"}
-        onClick={() => onChange("video")}
+        aria-pressed={value === "animation"}
+        onClick={() => onChange("animation")}
       >
-        Video
+        Animation
+      </button>
+      <button
+        type="button"
+        className={
+          value === "custom"
+            ? "movie-style-toggle__btn movie-style-toggle__btn--active"
+            : "movie-style-toggle__btn"
+        }
+        aria-pressed={value === "custom"}
+        onClick={() => onChange("custom")}
+      >
+        Custom
       </button>
     </div>
   );

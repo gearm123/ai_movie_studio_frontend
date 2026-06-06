@@ -2,7 +2,7 @@ import { STUDIO_CONFIG, clampBeatCount } from "../constants/studio";
 import { DEFAULT_PROJECT_SETTINGS, createBeatDraft } from "../constants/parameters";
 import type { BeatDraft, MovieProjectDraft, ProjectSettings, VisualStyle } from "../types/project";
 
-export function resizeBeats(current: BeatDraft[], beatCount: number, visualStyle: VisualStyle = "image"): BeatDraft[] {
+export function resizeBeats(current: BeatDraft[], beatCount: number, visualStyle: VisualStyle = "still"): BeatDraft[] {
   const nextCount = clampBeatCount(beatCount);
   if (current.length === nextCount) {
     return current.map((beat, idx) => ({
@@ -39,10 +39,7 @@ export function createInitialDraft(beatCount = STUDIO_CONFIG.defaultBeats): Movi
   return {
     beatCount: count,
     beats: resizeBeats([], count, visualStyle),
-    settings: {
-      ...DEFAULT_PROJECT_SETTINGS,
-      duration: count * STUDIO_CONFIG.secondsPerBeat,
-    },
+    settings: { ...DEFAULT_PROJECT_SETTINGS },
   };
 }
 

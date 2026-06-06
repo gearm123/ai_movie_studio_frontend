@@ -25,13 +25,14 @@ export function BeatPreview({
   compact = false,
 }: BeatPreviewProps) {
   const styleOption = getVisualStyleOption(visualStyle);
-  const isVideo = visualStyle === "video";
+  const isAnimation = visualStyle === "animation";
+  const isCustom = visualStyle === "custom";
 
   return (
     <div className={compact ? "beat-preview beat-preview--compact" : "beat-preview"}>
       <div
         className={
-          isVideo
+          isAnimation
             ? "beat-preview__frame beat-preview__frame--video"
             : "beat-preview__frame beat-preview__frame--image"
         }
@@ -40,9 +41,9 @@ export function BeatPreview({
         <div className="beat-preview__frame-inner">
           <span className="beat-preview__frame-badge">{styleOption.label}</span>
           <span className="beat-preview__frame-label">
-            {visualPrompt.trim() || `Beat ${beatIndex} visual`}
+            {visualPrompt.trim() || (isCustom ? `Beat ${beatIndex} upload` : `Beat ${beatIndex} visual`)}
           </span>
-          {isVideo ? <span className="beat-preview__motion-lines" /> : null}
+          {isAnimation ? <span className="beat-preview__motion-lines" /> : null}
         </div>
       </div>
       <div className="beat-preview__narration">

@@ -1,34 +1,48 @@
-import type { BeatAudioParams, BeatCompositionParams, BeatDraft, ProjectSettings, VisualStyle } from "../types/project";
+import type {
+  BeatAudioParams,
+  BeatCompositionParams,
+  BeatDraft,
+  ProjectSettings,
+  VisualPathBlueprint,
+  VisualStyle,
+} from "../types/project";
 
-export const NARRATION_VOICES = ["", "gary", "james", "jon", "laura", "rose"] as const;
+export const NARRATION_VOICES = ["auto", "gary", "james", "jon", "laura"] as const;
 
-/** Project narrators — extend this list as you add clone references / voice ids. */
-export const NARRATORS = [
-  {
-    key: "studio_default",
-    label: "Studio narrator",
-    description:
-      "Coqui XTTS voice clone. Per-beat tone comes from narration contracts (calm, warm, suspenseful, etc.).",
-    /** Maps to CLI `--voice` / NARRATION_VOICE_DEFAULT when wired to backend. */
-    backendVoice: "gary",
-    /** Maps to per-beat `audio_params.speaker` (empty = style default). */
-    backendSpeaker: "",
-  },
+export const VOICE_OPTIONS = [
+  { key: "auto", label: "Auto (figure default)" },
+  { key: "gary", label: "Gary" },
+  { key: "james", label: "James" },
+  { key: "jon", label: "Jon" },
+  { key: "laura", label: "Laura" },
 ] as const;
 
-export type NarratorKey = (typeof NARRATORS)[number]["key"];
+/** Figure-video style presets (matches local CLI `--style-preset` for biographical shorts). */
+export const FIGURE_STYLE_PRESETS = [
+  { key: "tiktok_ai_history", title: "TikTok" },
+  { key: "instagram_epictok", title: "Instagram Epictok" },
+  { key: "pixels", title: "Kane Pixels" },
+] as const;
 
-export function getNarrator(key: string) {
-  return NARRATORS.find((narrator) => narrator.key === key) ?? NARRATORS[0];
+/** Bundled custom templates with server-side stills (no AI visuals). */
+export const SERVER_BUNDLED_CUSTOM_TOPICS = [
+  "my_mysteriosgrandfather",
+  "my_mysterious_grandfather",
+  "my_mysteriousgrandfather",
+] as const;
+
+export function isBundledCustomTopic(topic: string): boolean {
+  const normalized = topic.trim().toLowerCase().replace(/-/g, "_");
+  return (SERVER_BUNDLED_CUSTOM_TOPICS as readonly string[]).includes(normalized);
 }
 
 /** Whole-movie types — add entries as backend pipelines ship. */
 export const MOVIE_TYPES = [
   {
     key: "figure_blueprint" as const,
-    label: "Figure Story",
+    label: "Figure video",
     description:
-      "Biographical short about a historical figure or topic. Uses figure story blueprints from the backend catalog.",
+      "Biographical short about a historical figure. The backend plans beats from your topic, like the local CLI.",
   },
 ] as const;
 
@@ -135,31 +149,35 @@ export const AUDIO_PARAM_SUGGESTIONS: Record<keyof Omit<BeatAudioParams, "speake
 
 export const VISUAL_STYLE_OPTIONS = [
   {
-    key: "image" as const,
-    label: "Image",
-    description: "Each beat uses a still frame with narration (T2I → still MP4).",
-    backendSkipImageToVideo: true,
+    key: "still" as const,
+    label: "Still image",
+    description: "Text-to-image still per beat with narration (local: --visualpath-blueprint text_to_image).",
+    backendVisualPath: "text_to_image" as VisualPathBlueprint,
     backendVisualDelivery: "still",
   },
   {
-    key: "video" as const,
-    label: "Video",
-    description: "Each beat uses animation with narration (T2I → SVD / I2V).",
-    backendSkipImageToVideo: false,
+    key: "animation" as const,
+    label: "Animation",
+    description: "Native text-to-video clip per beat (local: --visualpath-blueprint text_to_video).",
+    backendVisualPath: "text_to_video" as VisualPathBlueprint,
     backendVisualDelivery: "animation",
+  },
+  {
+    key: "custom" as const,
+    label: "Custom template",
+    description:
+      "Your own still per beat — no AI visuals. Example: my_mysteriosgrandfather with images under assets/zadey_visuals/<topic>/.",
+    backendVisualPath: "static_images" as VisualPathBlueprint,
+    backendVisualDelivery: "still",
   },
 ] as const;
 
-export function visualStyleFromSkipImageToVideo(skip: boolean): VisualStyle {
-  return skip ? "image" : "video";
-}
-
-export function skipImageToVideoFromVisualStyle(style: VisualStyle): boolean {
-  return style === "image";
+export function visualPathFromVisualStyle(style: VisualStyle): VisualPathBlueprint {
+  return getVisualStyleOption(style).backendVisualPath;
 }
 
 export function visualDeliveryFromVisualStyle(style: VisualStyle): string {
-  return style === "image" ? "still" : "animation";
+  return getVisualStyleOption(style).backendVisualDelivery;
 }
 
 export function getVisualStyleOption(style: VisualStyle) {
@@ -190,14 +208,12 @@ export const DEFAULT_PROJECT_SETTINGS: ProjectSettings = {
   style_preset: "tiktok_ai_history",
   mode: "tiktok",
   duration: 14,
-  narrator: "studio_default",
-  voice: "gary",
+  voice: "auto",
   delivery_profile: "cinematic_suspense",
   brand_show: false,
   to_be_continued: false,
   israel_war_hero: false,
-  visual_style: "image",
-  skip_image_to_video: true,
+  visual_style: "still",
   interpolate: false,
 };
 
@@ -220,7 +236,7 @@ export function defaultCompositionParams(index: number, total: number): BeatComp
   };
 }
 
-export function createBeatDraft(index: number, total: number, visualStyle: VisualStyle = "image"): BeatDraft {
+export function createBeatDraft(index: number, total: number, visualStyle: VisualStyle = "still"): BeatDraft {
   return {
     index,
     duration: 4,
@@ -229,6 +245,8 @@ export function createBeatDraft(index: number, total: number, visualStyle: Visua
     audio_params: { ...TIKTOK_DEFAULT_AUDIO_PARAMS },
     voice_reference_tone: "",
     visual_style: visualStyle,
+    custom_visual_url: null,
+    custom_visual_name: null,
     composition: {
       ...defaultCompositionParams(index, total),
       visual_delivery: visualDeliveryFromVisualStyle(visualStyle),

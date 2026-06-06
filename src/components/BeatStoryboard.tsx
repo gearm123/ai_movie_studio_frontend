@@ -23,9 +23,11 @@ export function BeatStoryboard({
       <div className="beat-storyboard__header">
         <h3 className="beat-storyboard__title">Storyboard</h3>
         <p className="beat-storyboard__hint">
-          {projectVisualStyle === "image"
+          {projectVisualStyle === "still"
             ? "Still image beats with narration."
-            : "Animated video beats with narration."}
+            : projectVisualStyle === "animation"
+              ? "Animated video beats with narration."
+              : "Custom still per beat — no AI visuals."}
         </p>
       </div>
       <ol className="beat-storyboard__list">

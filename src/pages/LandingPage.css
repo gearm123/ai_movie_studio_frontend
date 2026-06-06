@@ -36,6 +36,13 @@
   padding: 2rem;
 }
 
+.landing-page__logo {
+  display: block;
+  width: min(220px, 52vw);
+  height: auto;
+  margin: 0 auto 1.25rem;
+}
+
 .landing-page__eyebrow {
   font-size: 0.78rem;
   letter-spacing: 0.14em;

@@ -1,5 +1,7 @@
-/** Per-beat visual mode: still image or animated video (maps to SKIP_IMAGE_TO_VIDEO / visual_delivery). */
-export type VisualStyle = "image" | "video";
+/** Whole-movie visual pipeline — maps to backend visualpath_blueprint. */
+export type VisualStyle = "still" | "animation" | "custom";
+
+export type VisualPathBlueprint = "text_to_image" | "text_to_video" | "static_images";
 
 /** Whole-movie blueprint category — extend as backend adds pipelines. */
 export type MovieType = "figure_blueprint";
@@ -34,8 +36,11 @@ export interface BeatDraft {
   visual_prompt: string;
   audio_params: BeatAudioParams;
   voice_reference_tone: string;
-  /** Still frame or animated clip for this beat. */
+  /** Mirrors project visual_style for per-beat preview. */
   visual_style: VisualStyle;
+  /** Local preview URL when the user picks a custom still (object URL). */
+  custom_visual_url?: string | null;
+  custom_visual_name?: string | null;
   composition: BeatCompositionParams;
 }
 
@@ -46,18 +51,14 @@ export interface ProjectSettings {
   style_preset: string;
   mode: "tiktok" | "youtube_shorts";
   duration: number;
-  /** UI narrator key — maps to backend voice id when submitted. */
-  narrator: string;
-  /** Backend CLI `--voice` (kept in sync with narrator). */
+  /** Backend CLI `--voice`. */
   voice: string;
   delivery_profile: "cinematic_suspense" | "neutral";
   brand_show: boolean;
   to_be_continued: boolean;
   israel_war_hero: boolean;
-  /** Default visual mode for beats — image = stills, video = animation (SVD/I2V). */
+  /** still → text_to_image, animation → text_to_video, custom → static_images. */
   visual_style: VisualStyle;
-  /** Backend: true when visual_style is image (SKIP_IMAGE_TO_VIDEO=1). */
-  skip_image_to_video: boolean;
   interpolate: boolean;
 }
 

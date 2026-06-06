@@ -1,6 +1,7 @@
 .visual-style-selector {
   display: grid;
   gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .visual-style-selector--compact {
