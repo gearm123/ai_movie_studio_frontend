@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { StudioLayout } from "./components/StudioLayout";
-import { ProjectPanel } from "./components/ProjectPanel";
-import { LandingPage } from "./pages/LandingPage";
-import { ProjectSetupPage } from "./pages/ProjectSetupPage";
+import { StudioLayout } from "./layouts/StudioLayout";
+import { ProjectPanel } from "./pages/beats/ProjectPanel";
+import { LandingPage } from "./pages/landing/LandingPage";
+import { ProjectSetupPage } from "./pages/setup/ProjectSetupPage";
 import { useProjectDraft } from "./hooks/useProjectDraft";
 import type { AppStep } from "./types/steps";
 import "./App.css";

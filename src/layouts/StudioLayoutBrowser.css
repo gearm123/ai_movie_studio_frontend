@@ -1,11 +1,11 @@
-.studio-shell {
+.studio-browser {
   position: relative;
   min-height: 100vh;
   padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 2rem;
   overflow: hidden;
 }
 
-.studio-glow {
+.studio-browser__glow {
   position: absolute;
   width: 28rem;
   height: 28rem;
@@ -15,33 +15,33 @@
   opacity: 0.45;
 }
 
-.studio-glow--left {
+.studio-browser__glow--left {
   top: -8rem;
   left: -6rem;
   background: rgba(232, 184, 106, 0.22);
 }
 
-.studio-glow--right {
+.studio-browser__glow--right {
   top: 2rem;
   right: -10rem;
   background: rgba(96, 132, 255, 0.18);
 }
 
-.studio-header {
+.studio-browser__header {
   position: relative;
   z-index: 1;
   max-width: 72rem;
   margin: 0 auto 2.5rem;
 }
 
-.studio-brand {
+.studio-browser__brand {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 0.75rem;
 }
 
-.studio-brand__mark {
+.studio-browser__mark {
   display: grid;
   place-items: center;
   width: 3rem;
@@ -53,7 +53,7 @@
   font-size: 1rem;
 }
 
-.studio-brand__eyebrow {
+.studio-browser__eyebrow {
   font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -61,27 +61,21 @@
   margin-bottom: 0.15rem;
 }
 
-.studio-brand__title {
+.studio-browser__title {
   font-family: "Instrument Serif", Georgia, serif;
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 400;
   letter-spacing: -0.02em;
 }
 
-.studio-header__tagline {
-  max-width: 42rem;
-  color: var(--text-muted);
-  font-size: 1.05rem;
-}
-
-.studio-main {
+.studio-browser__main {
   position: relative;
   z-index: 1;
   max-width: 72rem;
   margin: 0 auto;
 }
 
-.studio-footer {
+.studio-browser__footer {
   position: relative;
   z-index: 1;
   display: flex;
@@ -91,11 +85,4 @@
   margin-top: 2.5rem;
   color: var(--text-muted);
   font-size: 0.85rem;
-}
-
-.studio-footer__dot {
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background: var(--accent);
 }

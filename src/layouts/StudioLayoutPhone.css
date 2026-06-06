@@ -1,0 +1,81 @@
+.studio-phone {
+  position: relative;
+  min-height: 100dvh;
+  min-height: 100svh;
+  padding:
+    calc(1.1rem + env(safe-area-inset-top, 0px))
+    1rem
+    calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+}
+
+.studio-phone__glow {
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  opacity: 0.38;
+}
+
+.studio-phone__glow--left {
+  top: -4rem;
+  left: -3rem;
+  background: rgba(232, 184, 106, 0.22);
+}
+
+.studio-phone__header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.15rem;
+}
+
+.studio-phone__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.studio-phone__mark {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, rgba(232, 184, 106, 0.25), rgba(232, 184, 106, 0.05));
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+.studio-phone__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.1rem;
+}
+
+.studio-phone__title {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.studio-phone__main {
+  position: relative;
+  z-index: 1;
+}
+
+.studio-phone__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.35rem;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}

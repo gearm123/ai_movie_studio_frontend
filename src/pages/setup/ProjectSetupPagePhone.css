@@ -1,0 +1,62 @@
+.setup-phone {
+  width: 100%;
+}
+
+.setup-phone__step {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
+}
+
+.setup-phone__title {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-bottom: 0.45rem;
+}
+
+.setup-phone__copy {
+  color: var(--text-muted);
+  margin-bottom: 1.15rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.setup-phone__card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+.setup-phone__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-top: 1.15rem;
+}
+
+.setup-phone__back,
+.setup-phone__continue {
+  border-radius: 0.85rem;
+  padding: 0.9rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.setup-phone__back {
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.setup-phone__continue {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(232, 184, 106, 0.24), rgba(232, 184, 106, 0.1));
+  color: var(--text);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}

@@ -1,0 +1,26 @@
+---
+description: Browser vs phone UI split — edit separate Browser/Phone files; owner works on browser
+globs:
+  - src/pages/**
+  - src/layouts/**
+  - src/viewports/**
+---
+
+# Viewport UI split
+
+This app uses **separate browser and phone UI trees** (not one responsive page component).
+
+- Breakpoint: **760px** (`src/viewports/constants.ts`)
+- **Browser** (>760px): edit `*Browser.tsx` / `*Browser.css`
+- **Phone** (≤760px): edit `*Phone.tsx` / `*Phone.css`
+- Entry routers: `LandingPage.tsx`, `ProjectSetupPage.tsx`, `ProjectPanel.tsx`, `StudioLayout.tsx`
+
+## Development focus
+
+The owner **primarily designs and reviews the browser UI**. Phone UI should stay visually aligned but lives in separate files. When implementing landing/setup/beats changes:
+
+1. Apply browser changes in `*Browser.*` when the owner is iterating on desktop.
+2. Mirror hierarchy and branding on phone in `*Phone.*` (touch targets, full-width CTAs, safe areas).
+3. Do not collapse browser/phone back into shared page CSS with `@media` for whole screens.
+
+Full map and dev preview (`?viewport=phone`): read `src/viewports/UI_CONTEXT.md`.

@@ -1,11 +1,11 @@
-.project-panel {
+.beats-browser {
   display: grid;
   grid-template-columns: minmax(16rem, 0.95fr) minmax(0, 1.6fr) minmax(14rem, 0.85fr);
   gap: 1.25rem;
   align-items: start;
 }
 
-.project-panel__top {
+.beats-browser__top {
   grid-column: 1 / -1;
   display: flex;
   justify-content: space-between;
@@ -13,39 +13,31 @@
   gap: 1rem;
 }
 
-.project-panel__step {
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.25rem;
-}
-
-.project-panel__title {
+.beats-browser__title {
   font-family: "Instrument Serif", Georgia, serif;
   font-size: clamp(1.5rem, 2.5vw, 2rem);
   font-weight: 400;
   margin: 0;
 }
 
-.project-panel__processing-note {
+.beats-browser__processing-note {
   margin: 0.35rem 0 0;
   font-size: 0.88rem;
   color: var(--accent);
   font-weight: 600;
 }
 
-.project-panel__workspace {
+.beats-browser__workspace {
   display: grid;
   gap: 1rem;
 }
 
-.project-panel__workspace--dimmed .beat-editor {
+.beats-browser__workspace--dimmed .beat-editor {
   opacity: 0.55;
   pointer-events: none;
 }
 
-.project-panel__back {
+.beats-browser__back {
   border: 1px solid var(--border-soft);
   border-radius: 0.65rem;
   padding: 0.55rem 0.85rem;
@@ -54,20 +46,20 @@
   font-size: 0.85rem;
 }
 
-.project-panel__structure,
-.project-panel__aside {
+.beats-browser__structure,
+.beats-browser__aside {
   display: grid;
   gap: 1rem;
 }
 
-.project-panel__summary {
+.beats-browser__summary {
   padding: 1.25rem;
   border-radius: 1rem;
   border: 1px dashed var(--border);
   background: rgba(255, 255, 255, 0.02);
 }
 
-.project-panel__summary-label {
+.beats-browser__summary-label {
   font-size: 0.78rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -75,47 +67,31 @@
   margin-bottom: 0.75rem;
 }
 
-.project-panel__summary-list {
+.beats-browser__summary-list {
   margin: 0 0 1rem;
   display: grid;
   gap: 0.55rem;
 }
 
-.project-panel__summary-list div {
+.beats-browser__summary-list div {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
   font-size: 0.88rem;
 }
 
-.project-panel__summary-list dt {
+.beats-browser__summary-list dt {
   color: var(--text-muted);
 }
 
-.project-panel__summary-list dd {
+.beats-browser__summary-list dd {
   margin: 0;
   font-weight: 600;
 }
 
-.project-panel__summary-note {
+.beats-browser__summary-note {
   margin: 0 0 0.85rem;
   font-size: 0.78rem;
   color: var(--accent);
   line-height: 1.4;
-}
-
-.project-panel__cta {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(232, 184, 106, 0.18), rgba(232, 184, 106, 0.08));
-  color: var(--text);
-  font-weight: 600;
-}
-
-@media (max-width: 1100px) {
-  .project-panel {
-    grid-template-columns: 1fr;
-  }
 }
