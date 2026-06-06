@@ -16,7 +16,6 @@ export function LandingPage({ onStart }: LandingPageProps) {
           alt="AI Movie Studio"
         />
         <p className="landing-page__eyebrow">AI Movie Studio</p>
-        <h1 className="landing-page__title">Generate video</h1>
         <button type="button" className="landing-page__cta" onClick={onStart}>
           Generate video
         </button>

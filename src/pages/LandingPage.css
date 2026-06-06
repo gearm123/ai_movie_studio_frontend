@@ -40,7 +40,7 @@
   display: block;
   width: min(220px, 52vw);
   height: auto;
-  margin: 0 auto 1.25rem;
+  margin: 0 auto 0.5rem;
 }
 
 .landing-page__eyebrow {
@@ -48,14 +48,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 0.75rem;
-}
-
-.landing-page__title {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 400;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
 }
 
 .landing-page__cta {
