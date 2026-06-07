@@ -5,6 +5,10 @@ import {
 } from "../constants/parameters";
 import type { JobCreateRequest } from "../api/types";
 import type { MovieProjectDraft, ProjectSettings } from "../types/project";
+import {
+  buildStudioContractsFromDraft,
+  validateStudioBeatsForJob,
+} from "./studioContracts";
 
 /**
  * Topic sent to the backend CLI positional arg.
@@ -56,6 +60,12 @@ export function draftToJobRequest(draft: MovieProjectDraft): JobCreateRequest {
     prefer_text_to_video: visual_style === "animation",
     skip_image_to_video: visual_style !== "animation",
   };
+
+  if (draft.settings.figure_source === "new") {
+    const contracts = buildStudioContractsFromDraft(draft);
+    request.narration_contract = contracts.narration_contract;
+    request.punctuation_contract = contracts.punctuation_contract;
+  }
 
   return request;
 }
@@ -120,6 +130,11 @@ export function validateDraftForJob(draft: MovieProjectDraft): string | null {
     if (missingVisuals > 0) {
       return `Upload one image for every beat (${missingVisuals} missing). You chose custom images on the setup page.`;
     }
+  }
+
+  const studioBeatError = validateStudioBeatsForJob(draft);
+  if (studioBeatError) {
+    return studioBeatError;
   }
 
   return null;

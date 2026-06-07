@@ -29,6 +29,9 @@ export interface JobCreateRequest {
   israel_war_hero?: boolean;
   to_be_continued?: boolean;
   interpolate?: boolean;
+  figure_story_blueprint?: string | null;
+  narration_contract?: string | null;
+  punctuation_contract?: string | null;
 }
 
 export interface JobRecord {
