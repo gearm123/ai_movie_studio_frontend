@@ -29,6 +29,7 @@ export function ProjectPanelBrowser({
   draft,
   onBeatCountChange,
   onBeatTextChange,
+  onBeatVoiceReferenceToneChange,
   onBeatVisualChange,
   onBack,
 }: ProjectPanelProps) {
@@ -93,6 +94,7 @@ export function ProjectPanelBrowser({
           visualStyle={draft.settings.visual_style}
           showCustomVisuals={showCustomVisuals}
           onBeatTextChange={onBeatTextChange}
+          onBeatVoiceReferenceToneChange={onBeatVoiceReferenceToneChange}
           onBeatVisualChange={onBeatVisualChange}
         />
       </div>

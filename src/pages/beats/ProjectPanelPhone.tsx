@@ -29,6 +29,7 @@ export function ProjectPanelPhone({
   draft,
   onBeatCountChange,
   onBeatTextChange,
+  onBeatVoiceReferenceToneChange,
   onBeatVisualChange,
   onBack,
 }: ProjectPanelProps) {
@@ -93,6 +94,7 @@ export function ProjectPanelPhone({
           visualStyle={draft.settings.visual_style}
           showCustomVisuals={showCustomVisuals}
           onBeatTextChange={onBeatTextChange}
+          onBeatVoiceReferenceToneChange={onBeatVoiceReferenceToneChange}
           onBeatVisualChange={onBeatVisualChange}
         />
       </div>

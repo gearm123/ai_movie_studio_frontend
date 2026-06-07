@@ -65,6 +65,13 @@
   color: var(--text-muted);
 }
 
+.beat-editor__silent-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--accent);
+  line-height: 1.45;
+}
+
 .beat-editor__custom {
   display: grid;
   gap: 0.65rem;

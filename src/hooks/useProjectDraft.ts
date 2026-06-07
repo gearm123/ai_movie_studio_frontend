@@ -106,12 +106,17 @@ export function useProjectDraft(initial?: MovieProjectDraft) {
     updateBeat(beatIndex, { narration: text });
   }, [updateBeat]);
 
+  const updateBeatVoiceReferenceTone = useCallback((beatIndex: number, tone: string) => {
+    updateBeat(beatIndex, { voice_reference_tone: tone });
+  }, [updateBeat]);
+
   return {
     draft,
     setBeatCount,
     updateSettings,
     updateBeat,
     updateBeatText,
+    updateBeatVoiceReferenceTone,
     updateBeatVisual,
     updateBeatAudioParam,
     updateBeatCompositionParam,

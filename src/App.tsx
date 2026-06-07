@@ -11,7 +11,8 @@ import "./App.css";
 function App() {
   const [step, setStep] = useState<AppStep>("landing");
   const [setupError, setSetupError] = useState<string | null>(null);
-  const { draft, setBeatCount, updateSettings, updateBeatText, updateBeatVisual } = useProjectDraft();
+  const { draft, setBeatCount, updateSettings, updateBeatText, updateBeatVoiceReferenceTone, updateBeatVisual } =
+    useProjectDraft();
 
   const handleSetupContinue = () => {
     const error = validateSetupSettings(draft.settings);
@@ -47,6 +48,7 @@ function App() {
           draft={draft}
           onBeatCountChange={setBeatCount}
           onBeatTextChange={updateBeatText}
+          onBeatVoiceReferenceToneChange={updateBeatVoiceReferenceTone}
           onBeatVisualChange={updateBeatVisual}
           onBack={() => setStep("setup")}
         />

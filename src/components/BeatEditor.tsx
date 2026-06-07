@@ -1,5 +1,6 @@
 import type { BeatDraft, VisualStyle } from "../types/project";
-import { TextAreaField } from "./ParameterField";
+import { VOICE_REFERENCE_TONES } from "../constants/parameters";
+import { SelectField, TextAreaField } from "./ParameterField";
 import "./BeatEditor.css";
 
 interface BeatEditorProps {
@@ -7,6 +8,7 @@ interface BeatEditorProps {
   visualStyle: VisualStyle;
   showCustomVisuals: boolean;
   onBeatTextChange: (beatIndex: number, text: string) => void;
+  onBeatVoiceReferenceToneChange: (beatIndex: number, tone: string) => void;
   onBeatVisualChange: (beatIndex: number, file: File | null) => void;
 }
 
@@ -15,6 +17,7 @@ export function BeatEditor({
   visualStyle,
   showCustomVisuals,
   onBeatTextChange,
+  onBeatVoiceReferenceToneChange,
   onBeatVisualChange,
 }: BeatEditorProps) {
   const beatsWithText = beats.filter((beat) => beat.narration.trim()).length;
@@ -52,6 +55,23 @@ export function BeatEditor({
                 onChange={(value) => onBeatTextChange(beat.index, value)}
               />
               <p className="beat-editor__word-count">{wordCount} words</p>
+
+              <SelectField
+                label="Narration tone"
+                hint="Per-beat voice reference — maps to assets/voice_references on the backend."
+                value={beat.voice_reference_tone}
+                options={VOICE_REFERENCE_TONES.map((tone) => ({
+                  value: tone.key,
+                  label: tone.label,
+                }))}
+                onChange={(value) => onBeatVoiceReferenceToneChange(beat.index, value)}
+              />
+              {beat.voice_reference_tone === "silent_memorial" ? (
+                <p className="beat-editor__silent-note">
+                  Silent memorial: leave narration empty. The pipeline uses a visual hold with no
+                  spoken words.
+                </p>
+              ) : null}
 
               {showCustomVisuals ? (
                 <div className="beat-editor__custom">
