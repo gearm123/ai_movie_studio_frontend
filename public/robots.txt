@@ -1,0 +1,8 @@
+# AI Movie Studio
+User-agent: *
+Allow: /
+
+# App steps (setup, beats) are in-app only — not separate crawlable routes.
+Disallow: /api/
+
+Sitemap: https://gearmstudio.netlify.app/sitemap.xml

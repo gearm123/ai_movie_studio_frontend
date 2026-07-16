@@ -10,7 +10,7 @@ export function LandingPageBrowser({ onStart }: LandingPageProps) {
       <main className="landing-browser__main">
         <LandingBrandLogo className="landing-browser__logo" />
         <div className="landing-browser__actions">
-          <p className="landing-browser__eyebrow">AI Movie Studio</p>
+          <h1 className="landing-browser__eyebrow">AI Movie Studio</h1>
           <button type="button" className="landing-browser__cta" onClick={onStart}>
             Generate Video
           </button>

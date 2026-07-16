@@ -10,7 +10,7 @@ export function LandingPagePhone({ onStart }: LandingPageProps) {
       <main className="landing-phone__main">
         <LandingBrandLogo className="landing-phone__logo" />
         <div className="landing-phone__actions">
-          <p className="landing-phone__eyebrow">AI Movie Studio</p>
+          <h1 className="landing-phone__eyebrow">AI Movie Studio</h1>
           <button type="button" className="landing-phone__cta" onClick={onStart}>
             Generate Video
           </button>
